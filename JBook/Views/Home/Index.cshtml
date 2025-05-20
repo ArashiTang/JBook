@@ -1,0 +1,40 @@
+﻿@model IEnumerable<book>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<header>
+    <h1>JBook</h1>
+    <p>Millions of books | Only for study</p>
+</header>
+
+<div class="search-box">
+    <input type="text" placeholder="Search for the title, author, or ISBN..." />
+    <button>Search</button>
+</div>
+
+<div class="categories">
+    <div class="category">1</div>
+    <div class="category">2</div>
+    <div class="category">3</div>
+    <div class="category">4</div>
+    <div class="category">5</div>
+    <div class="category">6</div>
+</div>
+
+<div class="book-list">
+    <div class="book-card">
+        <img src="" alt="sunzibingfa">
+        <p><strong>Sun Zi's Art of War</strong></p>
+        <p>Wu Sun</p>
+    </div>
+    <div class="book-card">
+        <img src="" alt="huozhe">
+        <p><strong>Alive</strong></p>
+        <p>Hua Yu</p>
+    </div>
+</div>
+
+<footer>
+    <p>This page is for teaching purposes only</p>
+</footer>
