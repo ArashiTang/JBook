@@ -20,3 +20,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.author-slider {
+    position: relative;
+}
+
+.author-slider .btn-slider {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+
+    .author-slider .btn-prev {
+        left: 0;
+    }
+
+    .author-slider .btn-next {
+        right: 0;
+    }    

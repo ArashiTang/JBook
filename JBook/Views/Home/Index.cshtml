@@ -3,38 +3,59 @@
     ViewData["Title"] = "Home Page";
 }
 
-<header>
-    <h1>JBook</h1>
-    <p>Millions of books | Only for study</p>
-</header>
+<main class="container my-10">
+    <section class="mb-5">
+        <div class="text-center mb-3">
+            <button class="btn btn-outline-secondary rounded-pill">Best-seller list</button>
+        </div>
+        <div class="row gx-3 row-cols-2 justify-content-center">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                <div class="bg-light" style="height:160px; border-radius:4px;"></div>
+                <p class="mt-2">Book1</p>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                <div class="bg-light" style="height:160px; border-radius:4px;"></div>
+                <p class="mt-2">Book2</p>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                <div class="bg-light" style="height:160px; border-radius:4px;"></div>
+                <p class="mt-2">Book3</p>
+            </div>
+        </div>
+    </section>
 
-<div class="search-box">
-    <input type="text" placeholder="Search for the title, author, or ISBN..." />
-    <button>Search</button>
-</div>
+    <section class="mb-5">
+        <div class="text-center mb-3">
+            <button class="btn btn-outline-secondary rounded-pill">Bookstore</button>
+        </div>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+            @for (int i = 0; i < 15; i++)
+            {
+                <div class="col">
+                    <div class="bg-light" style="height:140px; border-radius:4px;"></div>
+                </div>
+            }
+        </div>
+    </section>
 
-<div class="categories">
-    <div class="category">1</div>
-    <div class="category">2</div>
-    <div class="category">3</div>
-    <div class="category">4</div>
-    <div class="category">5</div>
-    <div class="category">6</div>
-</div>
-
-<div class="book-list">
-    <div class="book-card">
-        <img src="" alt="sunzibingfa">
-        <p><strong>Sun Zi's Art of War</strong></p>
-        <p>Wu Sun</p>
+    <div class="position-fixed top-50 end-0 translate-middle-y d-flex flex-column gap-2 me-3">
+        <button class="btn btn-outline-secondary">Back</button>
+        <button class="btn btn-outline-secondary">Help</button>
     </div>
-    <div class="book-card">
-        <img src="" alt="huozhe">
-        <p><strong>Alive</strong></p>
-        <p>Hua Yu</p>
-    </div>
-</div>
 
-<footer>
-    <p>This page is for teaching purposes only</p>
-</footer>
+    <section>
+        <div class="text-center mb-3">
+            <button class="btn btn-outline-secondary rounded-pill">Famous Author</button>
+        </div>
+        <div class="author-slider overflow-hidden">
+            <button class="btn btn-outline-secondary btn-slider btn-prev">&larr;</button>
+            <div class="d-flex overflow-auto gap-3 px-5 py-2">
+                @for (int j = 0; j < 5; j++)
+                {
+                    <div class="bg-light" style="min-width:120px; height:120px; border-radius:4px;"></div>
+                }
+            </div>
+            <button class="btn btn-outline-secondary btn-slider btn-next">&rarr;</button>
+        </div>
+    </section>
+</main>

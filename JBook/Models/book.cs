@@ -12,5 +12,6 @@ namespace JBook.Models
         public string? category { get; set; }
         public string? description { get; set; }
         public string? ISBN { get; set; }
+        public string? Url { get; set; }
     }
 }
