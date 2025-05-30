@@ -23,8 +23,8 @@ namespace JBook
 
             services.AddControllersWithViews();
 
-            services.AddDbContext<bookContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("bookContext")));
+            services.AddDbContext<BookContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("BookContext")));
         }
     }
 }

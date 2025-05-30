@@ -2,17 +2,17 @@
 
 namespace JBook.Models
 {
-    public class bookContext : DbContext
+    public class BookContext : DbContext
     {
-        public bookContext(DbContextOptions<bookContext> options)
+        public BookContext(DbContextOptions<BookContext> options)
             : base(options)
         { }
-        public DbSet<book> books { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<book>().HasData(
-                                new book
+            modelBuilder.Entity<Book>().HasData(
+                                new Book
                                 {
                                     bookId = 1,
                                     title = "Sun Zi's Art of War",
@@ -20,7 +20,7 @@ namespace JBook.Models
                                     ISBN = "9787552220094",
                                 },
 
-                                new book
+                                new Book
                                 {
                                     bookId = 2,
                                     title = "Alive",
