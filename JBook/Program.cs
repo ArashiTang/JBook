@@ -31,4 +31,4 @@ app.Run();
 
 
 builder.Services.AddDbContext<BookContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BookContext")));   
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BookContext")));

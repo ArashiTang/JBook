@@ -5,6 +5,7 @@ namespace JBook.Models
 {
     public class Book
     {
+        [Required]
         public int bookId { get; set; }
         public string? title { get; set; }
         public string? author { get; set; }
