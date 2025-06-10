@@ -8,12 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.12.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\JBook.Models\JBook.Shared.Models.csproj" />
   </ItemGroup>
 
 </Project>

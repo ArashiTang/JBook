@@ -1,0 +1,55 @@
+﻿@model JBook.Shared.Models.CombinedSearchResult
+
+@{
+    ViewData["Title"] = "搜索结果";
+}
+
+<h2>搜索结果</h2>
+
+<hr />
+<h3>📥 用户上传的书籍</h3>
+@if (Model.UserBooks.Any())
+{
+    foreach (var book in Model.UserBooks)
+    {
+        <div>
+            <a href="@book.Url" target="_blank">@book.Title - @book.Author - @book.Description</a>
+        </div>
+    }
+}
+else
+{
+    <p>暂无用户上传的结果。</p>
+}
+
+<hr />
+<h3>🔍 ZLibrary 结果</h3>
+@if (Model.ZLibraryBooks.Any())
+{
+    foreach (var book in Model.ZLibraryBooks)
+    {
+        <div>
+            <a href="@book.Url" target="_blank">@book.Title - @book.Author - @book.Description</a>
+        </div>
+    }
+}
+else
+{
+    <p>ZLibrary 无相关结果。</p>
+}
+
+<hr />
+<h3>🔎 OpenLibrary 结果</h3>
+@if (Model.OpenLibraryBooks.Any())
+{
+    foreach (var book in Model.OpenLibraryBooks)
+    {
+        <div>
+            <a href="@book.Url" target="_blank">@book.Title - @book.Author - @book.Description</a>
+        </div>
+    }
+}
+else
+{
+    <p>OpenLibrary 无相关结果。</p>
+}

@@ -1,3 +1,4 @@
+﻿//Tang Jiongzheng(c3509120)//
 using System.Diagnostics;
 using JBook.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -6,27 +7,15 @@ namespace JBook.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult User()
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(); // 后续创建 Views/Home/User.cshtml
         }
     }
 }
+
