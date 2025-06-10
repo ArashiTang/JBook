@@ -1,0 +1,26 @@
+﻿@model IEnumerable<JBook.Models.Document>
+
+<h2>我的书架</h2>
+<p>
+    <a asp-action="Add" class="btn btn-primary">添加书籍</a>
+</p>
+
+@if (!Model.Any())
+{
+    <p>当前没有书籍。</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var Document in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@Document.Title </span>
+                <form asp-action="Delete" method="post" style="margin:0">
+                    <input type="hidden" name="id" value="@Document.id" />
+                    <button type="submit" class="btn btn-sm btn-danger">删除</button>
+                </form>
+            </li>
+        }
+    </ul>
+}

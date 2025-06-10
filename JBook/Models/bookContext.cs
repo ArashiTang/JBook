@@ -8,6 +8,7 @@ namespace JBook.Models
             : base(options)
         { }
         public DbSet<Book> Books => Set<Book>();
+        public DbSet<Document> Documents => Set<Document>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,21 @@ namespace JBook.Models
                                     ISBN = "9787530221532",
                                 }
             );
+            modelBuilder.Entity<Document>().HasData(
+                    new Document
+                    {
+                        id = 1,
+                        Title = "Sun Zi's Art of War",
+
+                    },
+
+                    new Document
+                    {
+                        id = 2,
+                        Title = "Alive",
+
+                    }
+);
         }
     }
 }
