@@ -1,50 +1,77 @@
-﻿//Tang Jiongzheng(c3509120)//
+
+// Tang Jiongzheng(c3509120)//
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using JBook.Shared.Models;
 using JBookCrawler.Interface;
 
 namespace JBookCrawler.BookSource
 {
     public class ZLibrary : ICrawlerInterface
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private const string BaseUrl = "https://zh.z-library.sk";
+        private readonly HttpClient _httpClient;
 
-        public async Task<List<BookInfo>> SearchBooksAsync(string keyword)
+        public ZLibrary()
         {
-            var results = new List<BookInfo>();
-            string searchUrl = $"https://zh.z-library.sk/s/{Uri.EscapeDataString(keyword)}";
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Add(
+                "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+        }
 
-            var response = await _httpClient.GetStringAsync(searchUrl);
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(response);
+        public async Task<List<Book>> SearchBooksAsync(string keyword)
+        {
+            var books = new List<Book>();
+            var searchUrl = $"{BaseUrl}/s/{Uri.EscapeDataString(keyword)}";
 
-            // Z-Library 的搜索结果格式会变，这里是初版解析逻辑（需调试调整）
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'resItemBox')]");
-
-            if (nodes != null)
+            try
             {
-                foreach (var node in nodes)
-                {
-                    var titleNode = node.SelectSingleNode(".//h3/a");
-                    var authorNode = node.SelectSingleNode(".//div[@class='authors']");
+                var html = await _httpClient.GetStringAsync(searchUrl);
+                var doc = new HtmlDocument();
+                doc.LoadHtml(html);
 
-                    if (titleNode != null)
+                // Suchergebnisse-Container
+                var nodes = doc.DocumentNode.SelectNodes(
+                    "//div[contains(@class,'resItemBox')]");
+
+                if (nodes != null)
+                {
+                    foreach (var node in nodes)
                     {
-                        results.Add(new BookInfo
+                        var titleNode = node.SelectSingleNode(
+                            ".//a[contains(@class,'result-title')]");
+                        var authorNode = node.SelectSingleNode(
+                            ".//div[contains(@class,'authors')]");
+                        var formatNode = node.SelectSingleNode(
+                            ".//div[contains(@class,'property_value')]");
+
+                        var title = titleNode?.InnerText.Trim() ?? "Untitled";
+                        var author = authorNode?.InnerText.Trim() ?? "Unknown Author";
+                        var format = formatNode?.InnerText.Trim() ?? "Unknown Format";
+                        var href = titleNode?.GetAttributeValue("href", "");
+
+                        if (!string.IsNullOrEmpty(href))
                         {
-                            Title = titleNode.InnerText.Trim(),
-                            Url = "https://zh.z-library.sk" + titleNode.GetAttributeValue("href", ""),
-                            Author = authorNode?.InnerText.Trim() ?? "",
-                            Description = "" // ZLib 没有明显简介字段
-                        });
+                            books.Add(new Book
+                            {
+                                Title = title,
+                                Author = author,
+                                Url = BaseUrl + href,
+                                Description = $"Format: {format}"
+                            });
+                        }
                     }
                 }
-            }
 
-            return results;
+                return books;
+            }
+            catch
+            {
+                return new List<Book>();
+            }
         }
     }
 }
