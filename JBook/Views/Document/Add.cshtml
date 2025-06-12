@@ -1,0 +1,31 @@
+﻿@model JBook.Models.Document
+
+@{
+    ViewData["Title"] = "添加书籍";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Add" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="Title" class="form-label">标题 *</label>
+        <input id="Title" name="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="Author" class="form-label">作者</label>
+        <input id="Author" name="Author" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label for="File" class="form-label">上传 txt 文件（可选）</label>
+        <input id="File" name="File" type="file" class="form-control" accept=".txt" />
+    </div>
+    <button type="submit" class="btn btn-success">保存</button>
+    <a asp-action="Bookshelf" class="btn btn-secondary">取消</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

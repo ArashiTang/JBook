@@ -1,0 +1,12 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Read";
+}
+
+<div class="container mt-4">
+    <h4>在线阅读（TXT）</h4>
+    <div class="reader p-3 border rounded"
+         style="height:70vh; overflow-y:auto; white-space:pre-wrap;">
+        @Model
+    </div>
+</div>
