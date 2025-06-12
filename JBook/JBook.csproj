@@ -1,3 +1,4 @@
+
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
@@ -26,10 +27,12 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\JBookCrawler\JBookCrawler.csproj" />
     <ProjectReference Include="..\JBook.Shared.Models\JBook.Shared.Models.csproj" />
     <ProjectReference Include="..\JBookCrawler\JBookCrawler.csproj" />
   </ItemGroup>
+
 
 </Project>
