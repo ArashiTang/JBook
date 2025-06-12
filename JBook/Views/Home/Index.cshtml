@@ -1,63 +1,17 @@
-@model IEnumerable<Book>
-
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<main class="container my-10">
-    <section class="mb-5">
-        <div class="text-center mb-3">
-            <button class="btn btn-outline-secondary rounded-pill">Best-seller list</button>
-        </div>
-        <div class="row gx-3 row-cols-2 justify-content-center">
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                <div class="bg-light" style="height:160px; border-radius:4px;"></div>
-                <p class="mt-2">Book1</p>
-            </div>
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                <div class="bg-light" style="height:160px; border-radius:4px;"></div>
-                <p class="mt-2">Book2</p>
-            </div>
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                <div class="bg-light" style="height:160px; border-radius:4px;"></div>
-                <p class="mt-2">Book3</p>
-            </div>
-        </div>
-    </section>
-    
-    <section class="mb-5">
-        <div class="text-center mb-3">
-            <button class="btn btn-outline-secondary rounded-pill">Bookstore</button>
-        </div>
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
-            @for (int i = 0; i < 15; i++)
-            {
-                <div class="col">
-                    <div class="bg-light" style="height:140px; border-radius:4px;"></div>
-                </div>
-            }
-        </div>
-    </section>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+    <div></div> <!-- Placeholder -->
+    <a href="/Home/User">
+        <img src="/images/user.png" alt="User" style="width: 40px; height: 40px; border-radius: 50%;">
+    </a>
+</div>
 
-    <div class="position-fixed top-50 end-0 translate-middle-y d-flex flex-column gap-2 me-3">
-        <button class="btn btn-outline-secondary">Back</button>
-        <button class="btn btn-outline-secondary">Help</button>
-    </div>
-
-    <section>
-        <div class="text-center mb-3">
-            <button class="btn btn-outline-secondary rounded-pill">Famous Author</button>
-        </div>
-        <div class="author-slider overflow-hidden">
-            <button class="btn btn-outline-secondary btn-slider btn-prev">&larr;</button>
-            <div class="d-flex overflow-auto gap-3 px-5 py-2">
-                @for (int j = 0; j < 5; j++)
-                {
-                    <div class="bg-light" style="min-width:120px; height:120px; border-radius:4px;"></div>
-                }
-            </div>
-            <button class="btn btn-outline-secondary btn-slider btn-next">&rarr;</button>
-        </div>
-    </section>
-</main>
-
+<div style="display: flex; justify-content: center; margin-top: 100px;">
+    <form method="get" action="/Search/Result">
+        <input type="text" name="keyword" placeholder="Search books..."
+               style="width: 400px; padding: 10px; font-size: 16px;" />
+    </form>
+</div>
