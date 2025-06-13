@@ -29,7 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\JBookCrawler\JBookCrawler.csproj" />
     <ProjectReference Include="..\JBook.Shared.Models\JBook.Shared.Models.csproj" />
-    <ProjectReference Include="..\JBookCrawler\JBookCrawler.csproj" />
   </ItemGroup>
 
 </Project>
