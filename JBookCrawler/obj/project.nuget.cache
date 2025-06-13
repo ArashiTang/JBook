@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "1VMOOUyRhGM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\24839\\Desktop\\study work\\INFT3050\\JBook\\JBook\\JBookCrawler\\JBookCrawler.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\24839\\.nuget\\packages\\htmlagilitypack\\1.12.1\\htmlagilitypack.1.12.1.nupkg.sha512"
+  ],
+  "logs": []
+}
