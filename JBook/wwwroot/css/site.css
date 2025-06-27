@@ -39,3 +39,54 @@ body {
     .author-slider .btn-next {
         right: 0;
     }    
+
+
+
+/* 添加 */
+.register-link {
+    color: #6c757d; /* Bootstrap muted color */
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.register-link:hover {
+    color: #0d6efd; /* Bootstrap primary color */
+}
+.card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+.card .card-body {
+    align-items: start;
+}
+
+
+.hero-banner {
+    height: 300px;
+    background-color: #343a40; /* 暗背景暂代 */
+    background-size: cover;
+    background-position: center;
+    background-image: url('/img/placeholder-banner.jpg'); /* 可换成未来图路径 */
+}
+input:focus, button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+.shelf-box {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    text-decoration: none;
+}
+
+.shelf-box img {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+}

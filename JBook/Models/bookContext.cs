@@ -2,32 +2,32 @@
 
 namespace JBook.Models
 {
-    public class BookContext : DbContext
+    public class bookContext : DbContext
     {
-        public BookContext(DbContextOptions<BookContext> options)
+        public bookContext(DbContextOptions<bookContext> options)
             : base(options)
         { }
-        
-        public DbSet<Document> Documents => Set<Document>();
+        public DbSet<book> books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
-            modelBuilder.Entity<Document>().HasData(
-                    new Document
-                    {
-                        id = 1,
-                        Title = "Sun Zi's Art of War",
+            modelBuilder.Entity<book>().HasData(
+                                new book
+                                {
+                                    bookId = 1,
+                                    title = "Sun Zi's Art of War",
+                                    author = "Wu Sun",
+                                    ISBN = "9787552220094",
+                                },
 
-                    },
-
-                    new Document
-                    {
-                        id = 2,
-                        Title = "Alive",
-
-                    }
-);
+                                new book
+                                {
+                                    bookId = 2,
+                                    title = "Alive",
+                                    author = "Hua Yu",
+                                    ISBN = "9787530221532",
+                                }
+            );
         }
     }
 }

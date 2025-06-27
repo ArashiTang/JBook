@@ -1,32 +1,15 @@
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using JBookCrawler.Factory;
-using JBookCrawler.BookSource;
-using JBook.Models;
-using Microsoft.EntityFrameworkCore;
+svar builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddDbContext<BookContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BookContext")));
-
-// Add MVC service
+// Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Enable memory cache
-builder.Services.AddMemoryCache();
-
-// Register crawler service (note that it is singleton or transient, depending on the needs)
-builder.Services.AddTransient<ZLibrary>();
-builder.Services.AddTransient<OpenLibrary>();
-builder.Services.AddSingleton<CrawlerFactory>();
-
+builder.Services.AddSession(); // ✅ 新增：启用 Session 支持
 var app = builder.Build();
 
-// Configure HTTP pipeline
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -34,14 +17,17 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+
+//添加
+app.UseSession(); // 放在 app.UseRouting(); 和 app.UseAuthorization(); 之间
+
+
+
 app.UseAuthorization();
 
-// Configure default route
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
-);
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
-

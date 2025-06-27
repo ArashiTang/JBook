@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JBook.Models
 {
-    public class Book
+    public class book
     {
-        [Required]
         public int bookId { get; set; }
         public string? title { get; set; }
         public string? author { get; set; }
