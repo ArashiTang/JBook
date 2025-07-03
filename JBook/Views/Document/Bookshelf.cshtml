@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<JBook.Models.Document>
-
-<h2>我的书架</h2>
+@{
+    ViewData["Title"] = "Bookshelf";
+}
+<h2>My BookShelf</h2>
 <p>
-    <a asp-action="Add" class="btn btn-primary">添加书籍</a>
+    <a asp-action="Add" class="btn btn-primary">ADD</a>
 </p>
 
 @if (!Model.Any())
 {
-    <p>当前没有书籍。</p>
+    <p>None Book。</p>
 }
 else
 {
@@ -15,10 +17,10 @@ else
         @foreach (var Document in Model)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>@Document.Title </span>
+                <span><a asp-action="Read" asp-route-id="@Document.id">@Document.Title </a></span>
                 <form asp-action="Delete" method="post" style="margin:0">
                     <input type="hidden" name="id" value="@Document.id" />
-                    <button type="submit" class="btn btn-sm btn-danger">删除</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </li>
         }
