@@ -1,10 +1,12 @@
-﻿// Tang Jiongzheng (c3509120) //
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using JBook.Models;
 using JBook.Shared.Models;
 using JBookCrawler.Factory;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace JBook.Controllers
@@ -13,11 +15,16 @@ namespace JBook.Controllers
     {
         private readonly CrawlerFactory _factory;
         private readonly IMemoryCache _cache;
+        private readonly BookContext _db;
 
-        public SearchController(CrawlerFactory factory, IMemoryCache cache)
+        public SearchController(
+            CrawlerFactory factory,
+            IMemoryCache cache,
+            BookContext db)
         {
             _factory = factory;
             _cache = cache;
+            _db = db;
         }
 
         public async Task<IActionResult> Result(string keyword)
@@ -25,40 +32,58 @@ namespace JBook.Controllers
             if (string.IsNullOrWhiteSpace(keyword))
                 return RedirectToAction("Index", "Home");
 
-            // Cache key
+            // Construction Cache
             string cacheKey = $"search_{keyword}";
+
+            // Cache Read
             if (!_cache.TryGetValue(cacheKey, out CombinedSearchResult model))
             {
-                // Cache miss: call crawler
+                // Cache miss: first check the BookLink shared by the user from the database
+                var userUploaded = _db.BookLinks
+                    .Where(bl =>
+                        EF.Functions.Like(bl.Title, $"%{keyword}%") ||
+                        EF.Functions.Like(bl.Author, $"%{keyword}%"))
+                    .Select(bl => new Book
+                    {
+                        Title = bl.Title,
+                        Author = bl.Author,
+                        Url = bl.Url,
+                        Format = bl.Format,
+                        Description = bl.Description
+                    })
+                    .ToList();
+
+                // Two crawler sources
                 var zlibCrawler = _factory.GetCrawler("zlibrary");
-                var openLibCrawler = _factory.GetCrawler("openlibrary");
+                var openlibCrawler = _factory.GetCrawler("openlibrary");
 
-                var zlibResults = zlibCrawler != null ? await zlibCrawler.SearchBooksAsync(keyword) : new List<Book>();
-                var openLibResults = openLibCrawler != null ? await openLibCrawler.SearchBooksAsync(keyword) : new List<Book>();
+                var zlibResults = zlibCrawler != null
+                    ? await zlibCrawler.SearchBooksAsync(keyword)
+                    : new List<Book>();
 
-                // User upload example (subsequent database replacement)
-                var userUploaded = new List<Book>
-                {
-                    new Book { Title="Sample Books", Author="UserA", Url="https://example.com", Description="PDF" }
-                };
+                var openlibResults = openlibCrawler != null
+                    ? await openlibCrawler.SearchBooksAsync(keyword)
+                    : new List<Book>();
 
-                // Construct CombinedSearchResult
+                // Result
                 model = new CombinedSearchResult
                 {
                     UserBooks = userUploaded,
                     ZLibraryBooks = zlibResults,
-                    OpenLibraryBooks = openLibResults
+                    OpenLibraryBooks = openlibResults
                 };
 
-                // Store in cache (expires in 30 minutes)
-                var options = new MemoryCacheEntryOptions
+                // Write cache, 30 minutes expiration
+                var cacheOptions = new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
                 };
-                _cache.Set(cacheKey, model, options);
+                _cache.Set(cacheKey, model, cacheOptions);
             }
 
-            // Return view (view @model is CombinedSearchResult)
+            ViewBag.Keyword = keyword;
+
+            // Return to view
             return View(model);
         }
     }

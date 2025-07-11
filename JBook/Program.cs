@@ -4,6 +4,7 @@ using JBookCrawler.Factory;
 using JBookCrawler.BookSource;
 using JBook.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,17 @@ builder.Services.AddTransient<ZLibrary>();
 builder.Services.AddTransient<OpenLibrary>();
 builder.Services.AddSingleton<CrawlerFactory>();
 
+// Configure cookie authentication
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";   // Redirect here if not authenticated
+        options.LogoutPath = "/Account/Logout";  // Redirect after logout
+        options.ExpireTimeSpan = TimeSpan.FromHours(2);
+        options.SlidingExpiration = true;
+    });
+
 var app = builder.Build();
 
 // Configure HTTP pipeline
@@ -34,6 +46,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Configure default route
@@ -43,5 +56,3 @@ app.MapControllerRoute(
 );
 
 app.Run();
-
-

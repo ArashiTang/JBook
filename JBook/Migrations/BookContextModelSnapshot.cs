@@ -22,63 +22,108 @@ namespace JBook.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("JBook.Models.Book", b =>
+            modelBuilder.Entity("JBook.Models.Admin", b =>
                 {
-                    b.Property<int>("bookId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("bookId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ISBN")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("author")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("category")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id");
 
-                    b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-                    b.Property<string>("publisher")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("Nickname")
+                        .IsUnique();
 
-                    b.Property<string>("title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("bookId");
-
-                    b.ToTable("Books");
+                    b.ToTable("Admins");
 
                     b.HasData(
                         new
                         {
-                            bookId = 1,
-                            ISBN = "9787552220094",
-                            author = "Wu Sun",
-                            title = "Sun Zi's Art of War"
-                        },
+                            Id = 1,
+                            Email = "123456@admin.com",
+                            Nickname = "AdminJiaWei",
+                            Password = "123456"
+                        });
+                });
+
+            modelBuilder.Entity("JBook.Models.BookLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Format")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BookLinks");
+
+                    b.HasData(
                         new
                         {
-                            bookId = 2,
-                            ISBN = "9787530221532",
-                            author = "Hua Yu",
-                            title = "Alive"
+                            Id = 1,
+                            Author = "J.K.Rowling",
+                            Description = "Harry Potter #8",
+                            Format = "EPUB",
+                            Title = "Harry Potter and The Cursed Child",
+                            Url = "https://zh.z-library.sk/book/4288516/460399/harry-potter-and-the-cursed-child-harry-potter-8.html"
                         });
                 });
 
             modelBuilder.Entity("JBook.Models.Document", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContentType")
                         .HasColumnType("nvarchar(max)");
@@ -98,23 +143,93 @@ namespace JBook.Migrations
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("JBook.Models.ReadingSetting", b =>
+                {
+                    b.Property<int>("DocumentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BgColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Brightness")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FontSize")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LastPage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DocumentId");
+
+                    b.ToTable("ReadingSettings");
+                });
+
+            modelBuilder.Entity("JBook.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Nickname")
+                        .IsUnique();
+
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            id = 1,
-                            Title = "Sun Zi's Art of War",
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            id = 2,
-                            Title = "Alive",
-                            UploadedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Id = 1,
+                            Email = "114514@user.com",
+                            Nickname = "xiatounan",
+                            Password = "114514"
                         });
+                });
+
+            modelBuilder.Entity("JBook.Models.ReadingSetting", b =>
+                {
+                    b.HasOne("JBook.Models.Document", null)
+                        .WithOne("ReadingSetting")
+                        .HasForeignKey("JBook.Models.ReadingSetting", "DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JBook.Models.Document", b =>
+                {
+                    b.Navigation("ReadingSetting");
                 });
 #pragma warning restore 612, 618
         }

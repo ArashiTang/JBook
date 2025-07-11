@@ -12,9 +12,6 @@ namespace JBook.Controllers
             return View();
         }
 
-        public IActionResult User()
-        {
-            return View(); // Create Views/Home/User.cshtml later
-        }
+        
     }
 }

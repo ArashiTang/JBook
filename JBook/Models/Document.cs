@@ -1,9 +1,15 @@
-﻿namespace JBook.Models
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace JBook.Models
 {
     public class Document
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string? Title { get; set; }
+
+        public string? Author { get; set; }
         public string? FilePath { get; set; }
 
         public string? ContentType { get; set; }
@@ -12,5 +18,7 @@
 
         public string? CoverImage { get; set; }
         public string? Description { get; set; }
+
+        public ReadingSetting? ReadingSetting{ get; set; }
     }
 }

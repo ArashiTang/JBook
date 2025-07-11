@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Documents\**" />
+    <Content Remove="Views\Documents\**" />
+    <EmbeddedResource Remove="Views\Documents\**" />
+    <None Remove="Views\Documents\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Models\Book.cs" />
     <Compile Remove="Models\BookContextFactory.cs" />
   </ItemGroup>
