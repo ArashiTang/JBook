@@ -1,0 +1,262 @@
+/* ---------------- Base Font Size ---------------- */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+/* ---------------- Button & Input Focus Styles ---------------- */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* ---------------- Author Slider (Homepage/Authors) ---------------- */
+.author-slider {
+    position: relative;
+}
+
+    .author-slider .btn-slider {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+
+    .author-slider .btn-prev {
+        left: 0;
+    }
+
+    .author-slider .btn-next {
+        right: 0;
+    }
+
+/* ---------------- Custom Background for Main Page ---------------- */
+body.custom-bg {
+    background: url('/img/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+/* ---------------- Google Style Centered Box ---------------- */
+.google-center {
+    min-height: 65vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------------- Input Group Large ---------------- */
+.input-group-lg .form-control,
+.input-group-lg .input-group-text {
+    border-radius: 2rem;
+    font-size: 1.25rem;
+    background: #fff;
+}
+
+.google-center form {
+    border-radius: 2rem;
+    padding: 2rem 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.google-center img {
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.12));
+}
+
+/* ---------------- Main Search Bar Google Style ---------------- */
+.jbook-main-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 30px;
+}
+
+    .jbook-main-search input[type="text"] {
+        width: 480px;
+        height: 48px;
+        padding: 0 22px;
+        border: none;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: 0 2px 10px 0 rgba(60,64,67,.15), 0 1.5px 6px 0 rgba(60,64,67,.11);
+        font-size: 1.25rem;
+        outline: none;
+        transition: box-shadow .2s;
+    }
+
+        .jbook-main-search input[type="text"]:focus {
+            box-shadow: 0 4px 16px 0 rgba(60,64,67,.20), 0 2px 8px 0 rgba(60,64,67,.13);
+            background: #fff;
+        }
+
+/* ---------------- Custom Search Container/Bar ---------------- */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
+}
+
+.search-bar-form {
+    position: relative;
+    width: 600px;
+    max-width: 96vw;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 2px 8px rgba(60,64,67,.15);
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0;
+}
+
+.search-bar-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0 60px 0 18px; /* right padding for icon */
+    border-radius: 24px;
+    background: transparent;
+    height: 48px;
+    line-height: 48px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.search-bar-btn {
+    background: none;
+    border: none;
+    outline: none;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar-icon {
+    width: 32px;
+    height: 32px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.search-bar-btn:hover .search-bar-icon {
+    opacity: 1;
+}
+
+/* ---------------- Footer Styles ---------------- */
+footer,
+footer .container {
+    color: #fff !important;
+}
+
+    footer a {
+        color: #0d6efd !important; /* Bootstrap blue */
+        text-decoration: underline;
+    }
+
+        footer a:hover {
+            color: #0056b3 !important; /* Darker blue on hover */
+        }
+
+/* ---------------- Navbar: Glassmorphism, Colors, and Hover ---------------- */
+.navbar,
+.navbar.navbar-expand-sm {
+    background: rgba(30, 30, 40, 0.30) !important; /* Adjust opacity */
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+    /* All nav text white, with slight shadow */
+    .navbar .navbar-brand,
+    .navbar .navbar-nav .nav-link,
+    .navbar .navbar-nav .nav-item,
+    .navbar .navbar-text {
+        color: #fff !important;
+        font-weight: 500;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Remove outline/dotted borders on nav focus/active/visited */
+    .navbar .nav-link:focus,
+    .navbar .nav-link:active,
+    .navbar .nav-link:visited,
+    .navbar .nav-link:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        text-decoration: none !important;
+    }
+
+    /* Hover/active: lighter background + more blur + yellow text */
+    .navbar .navbar-nav .nav-link:hover,
+    .navbar .navbar-nav .nav-item:hover,
+    .navbar .navbar-brand:hover {
+        background: rgba(255,255,255,0.18) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        color: #ffe658 !important;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s, backdrop-filter 0.2s;
+    }
+
+    /* Add padding & border-radius for all nav items */
+    .navbar .navbar-nav .nav-link,
+    .navbar .navbar-brand {
+        padding: 8px 18px !important;
+        margin: 0 2px;
+        border-radius: 8px;
+    }
+
+    /* Remove link underline for all nav links */
+    .navbar a,
+    .navbar a:hover,
+    .navbar a:focus {
+        text-decoration: none !important;
+    }
+
+/* ---------------- Privacy Page Blur Content ---------------- */
+.container.mt-4 {
+    background: rgba(255,255,255,0.68); /* Translucent white */
+    box-shadow: 0 4px 24px rgba(0,0,0,0.11);
+    border-radius: 24px;
+    padding: 44px 32px 36px 32px;
+    margin-top: 48px;
+    margin-bottom: 48px;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    color: #161616 !important;
+    font-weight: 500;
+}
+
+    /* Black bold headings in privacy content */
+    .container.mt-4 h2,
+    .container.mt-4 h4 {
+        color: #101010 !important;
+        font-weight: 700;
+    }

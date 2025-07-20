@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Main Centered Area (Logo + Search) -->
+<div class="google-center">
+
+    <!-- Logo Section -->
+    <div class="d-flex justify-content-center align-items-center" style="height:180px;">
+        <!-- JBook Logo -->
+        <img src="~/img/logo.png" alt="JBook Logo"
+             style="width: 380px; height: auto; display: block;" />
+    </div>
+
+    <!-- Main Search Bar (Google Style) -->
+    <div class="search-container">
+        <form class="search-bar-form" method="get" action="/Search/Result">
+            <input class="search-bar-input" type="text" name="keyword" placeholder="Book Title or Author Name" />
+            <button class="search-bar-btn" type="submit">
+                <img src="/img/search-icon.png" class="search-bar-icon" alt="search" />
+            </button>
+        </form>
+    </div>
+</div>

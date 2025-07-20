@@ -1,0 +1,49 @@
+﻿@model JBook.Models.BookLink
+@{
+    ViewData["Title"] = "Share a Book";
+}
+
+<h2>Share a Book</h2>
+
+<!-- Success message -->
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<form asp-action="ShareLink" method="post">
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title *</label>
+        <input asp-for="Title" class="form-control" maxlength="100" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Author" class="form-label">Author</label>
+        <input asp-for="Author" class="form-control" maxlength="100" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Format" class="form-label">Format</label>
+        <input asp-for="Format" class="form-control" maxlength="100" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <input asp-for="Description" class="form-control" maxlength="100" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Url" class="form-label">Url *</label>
+        <input asp-for="Url" class="form-control" maxlength="500" />
+        <span asp-validation-for="Url" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,28 @@
+﻿@model IEnumerable<JBook.Models.Document>
+@{
+    ViewData["Title"] = "Bookshelf";
+}
+<h2>My BookShelf</h2>
+<p>
+    <a asp-action="Add" class="btn btn-primary">ADD</a>
+</p>
+
+@if (!Model.Any())
+{
+    <p>None Book。</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var Document in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><a asp-action="Read" asp-route-id="@Document.Id">@Document.Title </a></span>
+                <form asp-action="Delete" method="post" style="margin:0">
+                    <input type="hidden" name="id" value="@Document.Id" />
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,176 @@
+﻿@model JBook.Shared.Models.CombinedSearchResult
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<div class="search-results-page">
+    <!-- Top search bar -->
+    <div class="top-search-container">
+        <form method="get" asp-controller="Search" asp-action="Result">
+            <input type="text"
+                   name="keyword"
+                   placeholder="Book Title or Author Name"
+                   style="width: 550px; padding: 10px; font-size: 16px;"
+                   value="@ViewBag.Keyword" 
+                   />
+        </form>
+    </div>
+
+    <!-- Format screening (not completed) -->
+    @* <div class="format-filters">
+        <span>MOBI(<em>×</em>)</span>
+        <span>TXT(<em>×</em>)</span>
+        <span>EPUB(<em>×</em>)</span>
+        <span>PDF(<em>×</em>)</span>
+        <span>Other(<em>×</em>)</span>
+    </div> *@
+
+    <!-- Main two-column layout -->
+    <div class="results-container">
+        <!-- Left side: User sharing + crawler mixed results -->
+        <div class="col-left">
+            
+            <!-- User sharing -->
+            @if (Model.UserBooks.Any())
+            {
+                <div class="section user-links">
+                    @foreach (var b in Model.UserBooks)
+                    {
+                        <div class="book-item">
+                            <div class="book-header">
+                                <span class="book-title">@b.Title</span>
+                                <span class="book-author">- @b.Author</span>
+                                <span class="book-format">- @b.Format</span>
+                            </div>
+                            <div class="book-actions">
+                                <span class="book-description">@b.Description</span>
+                            </div>
+                            <div class="book-actions">
+                                <a href="@b.Url" target="_blank">Link</a>
+                                <a href="#" class="report">Report</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Right: crawler results -->
+        <div class="col-right">
+            <!-- ZLibrary -->
+            <h4>Z-Library (zh.z-library.sk):</h4>
+            @if (Model.ZLibraryBooks.Any())
+            {
+                <ul class="section zlib-results">
+                    @foreach (var b in Model.ZLibraryBooks)
+                    {
+                        <li><a href="@b.Url" target="_blank">@b.Title-@b.Author</a></li>
+                    }
+                </ul>
+            }
+            <!-- Open Library -->
+            <h4>Open Library (openlibrary.org):</h4>
+            @if (Model.OpenLibraryBooks.Any())
+            {
+                <ul class="openlib-list">
+                    @foreach (var b in Model.OpenLibraryBooks)
+                    {
+                        <li><a href="@b.Url" target="_blank">@b.Title-@b.Author</a></li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .search-results-page {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .top-search-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .top-search-form input {
+            width: 60%;
+            padding: 8px;
+            font-size: 16px;
+        }
+        .top-search-form button {
+            background: #ff0;
+            border: none;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        .format-filters {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .format-filters span {
+            margin: 0 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .results-container {
+            display: flex;
+            gap: 30px;
+        }
+        .col-left {
+            flex: 2;
+        }
+        .col-right {
+            flex: 1;
+            border-left: solid 1px #ddd;
+            padding-left: 20px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .book-item {
+            margin-bottom: 15px;
+        }
+        .book-header {
+            font-size: 16px;
+        }
+        .book-author,
+        .book-format {
+            color: #000000;
+            margin-left: 4px;
+            font-size: 14px;
+        }
+
+        .book-actions a {
+            margin-right: 10px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #FF9335;
+        }
+        .book-actions a.report {
+            color: #808080;
+        }
+
+        .openlib-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .openlib-list li {
+            margin-bottom: 8px;
+        }
+        .openlib-list a {
+            text-decoration: none;
+            color: #0066cc;
+        }
+    </style>
+}

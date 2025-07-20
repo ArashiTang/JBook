@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - JBook</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/JBook.styles.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+
+    <!-- Custom styles for background and center layout -->
+    <style>
+        body.custom-bg {
+            background: url('/img/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .google-center {
+            min-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="custom-bg">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- Left side navigation items -->
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <!-- Brand Logo -->
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="padding:0;">
+                                <img src="~/img/nav-logo.png" alt="JBook" style="height:44px; width:auto; vertical-align:middle;">
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="nav-share" class="nav-link text-dark" asp-area="" asp-controller="Share" asp-action="ShareLink">Share</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Document" asp-action="Bookshelf">Bookshelf</a>
+                        </li>
+                    </ul>
+
+                    <!-- Right side navigation items -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, @User.Identity.Name</span>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" asp-controller="Account" asp-action="Logout" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link">Quit</button>
+                            </form>
+                        </li>
+                        }
+                        else
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <form asp-controller="Account" asp-action="Login" method="post">
+                    <h5 class="mb-3">Login</h5>
+                    <!-- Error message (hidden by default) -->
+                    <div id="loginErrorMsg" class="alert alert-danger d-none" role="alert"></div>
+                    <div class="mb-2">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="Email" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="Password" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <div class="text-center mt-2">
+                        <small>No account? <a href="#" id="switch-to-register">Register</a></small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    <h5 class="mb-3">Register</h5>
+                    <div class="mb-2">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="Nickname" class="form-control" maxlength="50" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="Email" class="form-control" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="Password" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Register</button>
+                    <div class="text-center mt-2">
+                        <small>Already have an account? <a href="#" id="switch-to-login">Login</a></small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - JBook - <a asp-area="" asp-controller="Privacy" asp-action="jidonglitihudun">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- Script for showing login modal when login error occurs -->
+    @if (TempData["LoginError"] != null)
+    {
+    <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var modalEl = document.getElementById('loginModal');
+                var loginModal = new bootstrap.Modal(modalEl);
+                var errDiv = document.getElementById('loginErrorMsg');
+                errDiv.textContent = "@TempData["LoginError"]";
+                errDiv.classList.remove('d-none');
+                loginModal.show();
+            });
+    </script>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function () {
+            // Switch between login/register modals
+            $('#switch-to-register').click(e => {
+                e.preventDefault();
+                $('#loginModal').modal('hide');
+                $('#registerModal').modal('show');
+            });
+            $('#switch-to-login').click(e => {
+                e.preventDefault();
+                $('#registerModal').modal('hide');
+                $('#loginModal').modal('show');
+            });
+            // Intercept Share link: show login modal if not authenticated
+            $('#nav-share').click(e => {
+                var isAuth = '@(User.Identity.IsAuthenticated)'.toLowerCase() === 'true';
+                if (!isAuth) {
+                    e.preventDefault();
+                    $('#loginModal').modal('show');
+                }
+            });
+        });
+    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
