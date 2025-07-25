@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JBook.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20250711101841_wdnmd")]
-    partial class wdnmd
+    [Migration("20250724171233_addcfi")]
+    partial class addcfi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,6 +162,10 @@ namespace JBook.Migrations
 
                     b.Property<int>("Brightness")
                         .HasColumnType("int");
+
+                    b.Property<string>("Cfi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FontSize")
                         .HasColumnType("int");

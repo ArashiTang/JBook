@@ -160,6 +160,10 @@ namespace JBook.Migrations
                     b.Property<int>("Brightness")
                         .HasColumnType("int");
 
+                    b.Property<string>("Cfi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FontSize")
                         .HasColumnType("int");
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JBook.Migrations
 {
     /// <inheritdoc />
-    public partial class wdnmd : Migration
+    public partial class addcfi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -86,6 +86,7 @@ namespace JBook.Migrations
                     BgColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FontSize = table.Column<int>(type: "int", nullable: false),
                     LastPage = table.Column<int>(type: "int", nullable: false),
+                    Cfi = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Brightness = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
