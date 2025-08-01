@@ -26,8 +26,15 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="Format" class="form-label">Format</label>
-        <input asp-for="Format" class="form-control" maxlength="100" />
+        <label asp-for="Format" class="form-label">Format</label>     
+        <select asp-for="Format" class="form-control" required>
+            <option value="TXT">TXT</option>
+            <option value="EPUB">EPUB</option>
+            <option value="MOBI">MOBI</option>
+            <option value="PDF">PDF</option>
+            <option value="Other">Other</option>
+        </select>
+        <span asp-validation-for="Format" class="text-danger"></span>
     </div>
 
     <div class="mb-3">

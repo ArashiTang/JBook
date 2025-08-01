@@ -2,53 +2,102 @@
 
 @{
     ViewData["Title"] = "Search Results";
+    // 从 ViewBag 拿出 keyword、formatCounts、selectedFormat
+    var keyword = ViewBag.Keyword as string ?? "";
+    var counts = ViewBag.FormatCounts as IDictionary<string, int>
+                 ?? new Dictionary<string, int>();
+    var selFormat = ViewBag.SelectedFormat as string;
+    var formats = new[] { "TXT", "EPUB", "MOBI", "PDF", "Other" };
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+@if (TempData["ReportSuccess"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["ReportSuccess"]
+    </div>
 }
 
 <div class="search-results-page">
     <!-- Top search bar -->
     <div class="top-search-container">
-        <form method="get" asp-controller="Search" asp-action="Result">
+        <form method="get" asp-controller="Search" asp-action="Result" class="d-flex">
             <input type="text"
                    name="keyword"
                    placeholder="Book Title or Author Name"
+                   class="form-control me-2"
                    style="width: 550px; padding: 10px; font-size: 16px;"
-                   value="@ViewBag.Keyword" 
-                   />
+                   value="@keyword" />
+            @* 如果已经选了格式，要将其作为隐藏字段带上 *@
+            @if (!string.IsNullOrEmpty(selFormat))
+            {
+                <input type="hidden" name="format" value="@selFormat" />
+            }
+            <button type="submit" class="btn btn-warning">Search</button>
         </form>
     </div>
 
-    <!-- Format screening (not completed) -->
-    @* <div class="format-filters">
-        <span>MOBI(<em>×</em>)</span>
-        <span>TXT(<em>×</em>)</span>
-        <span>EPUB(<em>×</em>)</span>
-        <span>PDF(<em>×</em>)</span>
-        <span>Other(<em>×</em>)</span>
-    </div> *@
+    <!-- Format filtering bar -->
+    <div class="format-filters mb-3 text-center">
+        @foreach (var fmt in formats)
+        {
+            var cnt = counts.ContainsKey(fmt) ? counts[fmt] : 0;
+            var isSelected = fmt == selFormat;
+            var style = isSelected ? "font-weight:bold; text-decoration:underline;" : "";
+
+            <a asp-action="Result"
+               asp-route-keyword="@keyword"
+               asp-route-format="@fmt"
+               style="@style"
+               class="mx-1">
+                @* 使用 <text> 来让 Razor 输出纯文本 *@
+                @($"{fmt}({cnt})")
+            </a>
+
+            @if (fmt != formats.Last())
+            {
+                <text> |</text>
+            }
+        }
+
+        @* “清除筛选” 链接 *@
+        @if (!string.IsNullOrEmpty(selFormat))
+        {
+            <text>&nbsp;&nbsp;</text>
+            <a asp-action="Result"
+               asp-route-keyword="@keyword"
+               class="text-secondary">
+                Clear filter
+            </a>
+        }
+    </div>
 
     <!-- Main two-column layout -->
-    <div class="results-container">
-        <!-- Left side: User sharing + crawler mixed results -->
-        <div class="col-left">
-            
-            <!-- User sharing -->
+    <div class="results-container d-flex" style="gap:30px;">
+        <!-- Left side: User shared links -->
+        <div class="col-left flex-grow-2">
             @if (Model.UserBooks.Any())
             {
                 <div class="section user-links">
+                    <h4>Your Shared Links</h4>
                     @foreach (var b in Model.UserBooks)
                     {
-                        <div class="book-item">
-                            <div class="book-header">
-                                <span class="book-title">@b.Title</span>
-                                <span class="book-author">- @b.Author</span>
-                                <span class="book-format">- @b.Format</span>
+                        <div class="book-item mb-3">
+                            <div class="book-header mb-1" style="font-size:16px;">
+                                <span class="book-title text-dark">@b.Title</span>
+                                <span class="book-author text-dark">— @b.Author</span>
+                                <span class="book-format text-dark">(@b.Format)</span>
                             </div>
+                            <div class="book-description mb-1 text-muted">@b.Description</div>
                             <div class="book-actions">
-                                <span class="book-description">@b.Description</span>
-                            </div>
-                            <div class="book-actions">
-                                <a href="@b.Url" target="_blank">Link</a>
-                                <a href="#" class="report">Report</a>
+                                <a href="@b.Url" target="_blank" class="me-2">Link</a>
+                                <a asp-controller="Report"
+                                   asp-action="Create"
+                                   asp-route-linkId="@b.Id"
+                                   asp-route-returnUrl="@returnUrl"
+                                   class="report">
+                                    Report
+                                </a>
                             </div>
                         </div>
                     }
@@ -56,30 +105,45 @@
             }
         </div>
 
-        <!-- Right: crawler results -->
-        <div class="col-right">
-            <!-- ZLibrary -->
-            <h4>Z-Library (zh.z-library.sk):</h4>
-            @if (Model.ZLibraryBooks.Any())
-            {
-                <ul class="section zlib-results">
-                    @foreach (var b in Model.ZLibraryBooks)
-                    {
-                        <li><a href="@b.Url" target="_blank">@b.Title-@b.Author</a></li>
-                    }
-                </ul>
-            }
-            <!-- Open Library -->
-            <h4>Open Library (openlibrary.org):</h4>
-            @if (Model.OpenLibraryBooks.Any())
-            {
-                <ul class="openlib-list">
-                    @foreach (var b in Model.OpenLibraryBooks)
-                    {
-                        <li><a href="@b.Url" target="_blank">@b.Title-@b.Author</a></li>
-                    }
-                </ul>
-            }
+        <!-- Right side: crawler results -->
+        <div class="col-right flex-grow-1 border-start ps-3">
+            <div class="section zlib-results mb-4">
+                <h4>Z-Library Results</h4>
+                @if (Model.ZLibraryBooks.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var b in Model.ZLibraryBooks)
+                        {
+                            <li class="mb-2">
+                                <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No Z-Library results.</p>
+                }
+            </div>
+
+            <div class="section openlib-results">
+                <h4>OpenLibrary Results</h4>
+                @if (Model.OpenLibraryBooks.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var b in Model.OpenLibraryBooks)
+                        {
+                            <li class="mb-2">
+                                <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No OpenLibrary results.</p>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -90,87 +154,22 @@
             padding: 20px;
             font-family: Arial, sans-serif;
         }
-        .top-search-form {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        .top-search-form input {
-            width: 60%;
-            padding: 8px;
-            font-size: 16px;
-        }
-        .top-search-form button {
-            background: #ff0;
-            border: none;
-            padding: 0 15px;
-            cursor: pointer;
-        }
 
-        .format-filters {
-            text-align: center;
+        .top-search-container {
             margin-bottom: 20px;
         }
-        .format-filters span {
-            margin: 0 8px;
+
+        .format-filters a {
+            color: #333;
             font-size: 14px;
-            color: #666;
         }
 
         .results-container {
-            display: flex;
-            gap: 30px;
-        }
-        .col-left {
-            flex: 2;
-        }
-        .col-right {
-            flex: 1;
-            border-left: solid 1px #ddd;
-            padding-left: 20px;
+            margin-top: 20px;
         }
 
-        .section {
-            margin-bottom: 30px;
-        }
-        .section h4 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .book-item {
-            margin-bottom: 15px;
-        }
-        .book-header {
-            font-size: 16px;
-        }
-        .book-author,
-        .book-format {
-            color: #000000;
-            margin-left: 4px;
-            font-size: 14px;
-        }
-
-        .book-actions a {
-            margin-right: 10px;
-            font-size: 14px;
-            text-decoration: none;
-            color: #FF9335;
-        }
-        .book-actions a.report {
-            color: #808080;
-        }
-
-        .openlib-list {
-            list-style: none;
-            padding-left: 0;
-        }
-        .openlib-list li {
-            margin-bottom: 8px;
-        }
-        .openlib-list a {
-            text-decoration: none;
-            color: #0066cc;
+        .book-item .book-header span {
+            margin-right: 8px;
         }
     </style>
 }

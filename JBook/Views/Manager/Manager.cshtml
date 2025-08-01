@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Report>
+
+@{
+    ViewData["Title"] = "Manager Dashboard";
+}
+
+@section Styles {
+    <style>
+        .table-fixed {
+          table-layout: fixed;
+          width: 100%;
+        }
+        .table-fixed th:nth-child(1),
+        .table-fixed td:nth-child(1) {
+          width: 70%;
+        }
+        .table-fixed th:nth-child(2),
+        .table-fixed td:nth-child(2) {
+          width: 30%;
+          white-space: nowrap;
+        }
+    </style>
+}
+
+<h2>Manager Dashboard</h2>
+
+<table class="table table-bordered table-fixed">
+    <thead>
+        <tr>
+            <th>Report Message</th>
+            <th>Delete BookLink</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rpt in Model)
+        {
+            <tr>
+                <td>@rpt.Message</td>
+                <td>
+                    <div class="d-flex">
+                        <form asp-action="Execute" method="post" class="me-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="reportId" value="@rpt.Id" />
+                            <button type="submit" class="btn btn-danger flex-fill">
+                                Execute
+                            </button>
+                        </form>
+                        <form asp-action="Ignore" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="reportId" value="@rpt.Id" />
+                            <button type="submit" class="btn btn-secondary flex-fill">
+                                Ignore
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

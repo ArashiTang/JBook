@@ -19,9 +19,10 @@ namespace JBook.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string Email, string Password)
         {
-            // Try to match in the users table
+            // 尝试普通用户表
             var user = _db.Users
                           .FirstOrDefault(u => u.Email == Email && u.Password == Password);
 
@@ -35,7 +36,7 @@ namespace JBook.Controllers
             }
             else
             {
-                // Try to match in the admin table
+                // 尝试管理员表
                 var admin = _db.Admins
                                .FirstOrDefault(a => a.Email == Email && a.Password == Password);
 
@@ -49,7 +50,7 @@ namespace JBook.Controllers
                 name = admin.Nickname;
             }
 
-            // Construct user claims and check in
+            // 构造 Claims 并写入 Cookie
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, name),
@@ -63,13 +64,14 @@ namespace JBook.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(
             string Nickname,
             string Email,
             string Password,
             string ConfirmPassword)
         {
-            // Simple verification
+            // 简单校验
             if (Password != ConfirmPassword)
             {
                 TempData["RegisterError"] = "Passwords do not match.";
@@ -81,7 +83,7 @@ namespace JBook.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // Create and save new user
+            // 创建并保存新用户
             var user = new User
             {
                 Nickname = Nickname,
@@ -91,19 +93,21 @@ namespace JBook.Controllers
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
-            // Automatically log in
+            // 自动登录
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Nickname),
                 new Claim(ClaimTypes.Role, "User")
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
