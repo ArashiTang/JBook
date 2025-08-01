@@ -8,24 +8,51 @@
 
 <form asp-action="Add" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
     <div class="mb-3">
         <label for="Title" class="form-label">Title *</label>
         <input id="Title" name="Title" class="form-control" />
     </div>
+
     <div class="mb-3">
-        <label for="Author" class="form-label">Author*</label>
+        <label for="Author" class="form-label">Author *</label>
         <input id="Author" name="Author" class="form-control" />
     </div>
+
     <div class="mb-3">
-        <label for="File" class="form-label">Upload File*</label>
-        <input id="File" name="File" type="file" class="form-control" />
+        <label for="File" class="form-label">Upload File *</label>
+        <input id="File"
+               name="File"
+               type="file"
+               class="form-control"
+               accept=".txt,.pdf,.epub"      
+        required />
+        <div class="form-text">
+            Only <code>.txt</code>, <code>.pdf</code> or <code>.epub</code> files are allowed.
+        </div>
     </div>
+
     <button type="submit" class="btn btn-success">Save</button>
     <a asp-action="Bookshelf" class="btn btn-secondary">Cancel</a>
 </form>
 
 @section Scripts {
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        document.getElementById('File').addEventListener('change', function () {
+          const allowed = ['txt','pdf','epub'];
+          const file = this.files[0];
+          if (file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!allowed.includes(ext)) {
+              alert('Only .txt, .pdf or .epub files are allowed.');
+              this.value = '';
+            }
+          }
+        });
+    </script>
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using VersOne.Epub;
 
 namespace JBook.Controllers
 {
@@ -40,26 +41,72 @@ namespace JBook.Controllers
         // POST: /Bookshelf/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add([FromForm] string Title, [FromForm] string Author, IFormFile File)
+        public async Task<IActionResult> Add(
+            [FromForm] string Title,
+            [FromForm] string Author,
+            IFormFile File)
         {
-
             if (!ModelState.IsValid)
-                return View();
-
-            string path = null;
-            if (File != null && File.Length > 0)
             {
-                var uploadDir = Path.Combine(_env.WebRootPath, "uploads");
-                Directory.CreateDirectory(uploadDir);
-                var fileName = Path.GetFileName(File.FileName);
-                path = Path.Combine("uploads", fileName);
-                using var stream = new FileStream(Path.Combine(_env.WebRootPath, path), FileMode.Create);
-                await File.CopyToAsync(stream);
+                return View();
             }
 
-            var Document = new Document { Title = Title, FilePath = path, Author = Author };
-            _context.Documents.Add(Document);
-            await _context.SaveChangesAsync();
+            string path = null;
+            string contentType = null;
+            if (File != null && File.Length > 0)
+            {
+                string uploadDir = Path.Combine(_env.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadDir);
+
+                string ext = Path.GetExtension(File.FileName).ToLower();
+                string fileName = $"{Guid.NewGuid()}{ext}";
+                path = Path.Combine("uploads", fileName);
+                string fullPath = Path.Combine(_env.WebRootPath, path);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await File.CopyToAsync(stream);
+                }
+
+                contentType = File.ContentType;
+            }
+
+            var document = new Document
+            {
+                Title = Title,
+                Author = Author,
+                FilePath = path,
+                ContentType = contentType
+            };
+            _context.Documents.Add(document);
+            await _context.SaveChangesAsync();  
+
+            if (!string.IsNullOrEmpty(path) &&
+                Path.GetExtension(path).Equals(".epub", StringComparison.OrdinalIgnoreCase))
+            {
+                string epubFullPath = Path.Combine(_env.WebRootPath, path);
+                using (FileStream epubStream = System.IO.File.OpenRead(epubFullPath))
+                {
+                    EpubBook epubBook = await EpubReader.ReadBookAsync(epubStream);
+                    if (epubBook.CoverImage != null)
+                    {
+                        string coverDir = Path.Combine(_env.WebRootPath, "covers");
+                        Directory.CreateDirectory(coverDir);
+
+                        string coverFileName = $"{document.Id}.jpg";
+                        string coverRelPath = Path.Combine("covers", coverFileName).Replace("\\", "/");
+                        string coverFullPath = Path.Combine(_env.WebRootPath, coverRelPath);
+                        if (epubBook.CoverImage != null)
+                        {
+                            await System.IO.File.WriteAllBytesAsync(coverFullPath, epubBook.CoverImage);
+                        }
+
+                        document.CoverPath = coverRelPath;
+                        _context.Documents.Update(document);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
 
             return RedirectToAction(nameof(Bookshelf));
         }

@@ -16,8 +16,10 @@ namespace JBook.Models
 
         public DateTime UploadedAt { get; set; }
 
-        public string? CoverImage { get; set; }
-        public string? Description { get; set; }
+        public string? CoverPath { get; set; }
+        //public string? CoverImage { get; set; }
+
+        //public string? Description { get; set; }
 
         public ReadingSetting? ReadingSetting{ get; set; }
     }

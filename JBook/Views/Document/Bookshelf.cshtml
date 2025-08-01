@@ -1,28 +1,58 @@
 ﻿@model IEnumerable<JBook.Models.Document>
-@{
-    ViewData["Title"] = "Bookshelf";
-}
-<h2>My BookShelf</h2>
-<p>
-    <a asp-action="Add" class="btn btn-primary">ADD</a>
-</p>
+@using System.IO
 
-@if (!Model.Any())
-{
-    <p>None Book。</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var Document in Model)
+<h2 class="my-4 text-center">MY Bookshelf</h2>
+
+<div class="container">
+    <div class="row gx-3 gy-4">
+        @foreach (var doc in Model)
         {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><a asp-action="Read" asp-route-id="@Document.Id">@Document.Title </a></span>
-                <form asp-action="Delete" method="post" style="margin:0">
-                    <input type="hidden" name="id" value="@Document.Id" />
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </li>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="card h-100 text-center shadow-sm" style="min-height:300px;">
+                    <a asp-action="Read" asp-route-id="@doc.Id" class="d-block">
+                        @{
+                            string filePath = doc.FilePath ?? "";
+                            string ext = System.IO.Path.GetExtension(filePath)?.ToLowerInvariant() ?? "";
+                        }
+                        @if (ext == ".epub" && !string.IsNullOrEmpty(doc.CoverPath))
+                        {
+                            <img src="~/@doc.CoverPath"
+                                 class="card-img-top img-fluid"
+                                 style="max-height:210px; object-fit:cover;"
+                                 alt="@doc.Title" />
+                        }
+                        else
+                        {
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                                 style="height:210px; padding:0.5rem;">
+                                <span class="small text-center">@doc.Title</span>
+                            </div>
+                        }
+                    </a>
+                    <div class="card-body p-2">
+                        <h5 class="card-title small text-truncate" title="@doc.Title">
+                            @doc.Title
+                        </h5>
+                        <form asp-action="Delete" method="post" class="mt-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@doc.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         }
-    </ul>
-}
+
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <a asp-action="Add"
+               class="card h-100 text-center border-dashed d-flex align-items-center justify-content-center">
+                <div>
+                    <i class="fas fa-plus fa-2x"></i>
+                    <p class="mt-2 small">Add Book</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
