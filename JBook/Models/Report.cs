@@ -9,6 +9,9 @@ namespace JBook.Models
         public int Id { get; set; }
 
         [Required]
+        public int LinkId { get; set; }
+
+        [Required]
         public string Message { get; set; } = string.Empty;
 
         [Required]
