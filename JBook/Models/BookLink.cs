@@ -18,7 +18,7 @@ namespace JBook.Models
         public string Author { get; set; } = string.Empty;
 
         /// Format, up to 100 characters
-        [MaxLength(100)]
+        [Required, MaxLength(5)]
         public string Format { get; set; } = string.Empty;
 
         /// Description, up to 100 characters

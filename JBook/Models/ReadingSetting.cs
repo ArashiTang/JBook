@@ -21,6 +21,7 @@ namespace JBook.Models
         public int FontSize { get; set; }      
         public int LastPage { get; set; }
 
+        public string Cfi { get; set; }
         public int Brightness { get; set; }
     }
 }

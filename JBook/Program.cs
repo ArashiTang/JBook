@@ -1,10 +1,11 @@
-using Microsoft.Extensions.Caching.Memory;
+ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using JBookCrawler.Factory;
 using JBookCrawler.BookSource;
 using JBook.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,10 @@ builder.Services
     });
 
 var app = builder.Build();
+
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".epub"] = "application/epub+zip";
+app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 
 // Configure HTTP pipeline
 if (!app.Environment.IsDevelopment())

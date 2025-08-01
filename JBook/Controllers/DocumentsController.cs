@@ -97,6 +97,13 @@ namespace JBook.Controllers
             {
                 return PhysicalFile(filePath, "application/pdf");
             }
+            else if (ext == "epub")
+            {
+                ViewBag.FileUrl = Url.Content($"~/uploads/{Path.GetFileName(document.FilePath)}");
+                ViewBag.FileExt = ext;
+                ViewBag.DocumentId = document.Id;
+                        return View(document);
+            }
             var content = await System.IO.File.ReadAllTextAsync(filePath);
             ViewBag.Title = document.Title;
             ViewBag.Author = document.Author;
@@ -119,7 +126,8 @@ namespace JBook.Controllers
                     theme = "light",
                     bgColor = "#ffffff",
                     fontSize = 16,
-                    lastPage = 0
+                    lastPage = 0,
+                    cfi = ""
                 });
             }
             return Json(new
@@ -127,9 +135,11 @@ namespace JBook.Controllers
                 theme = setting.Theme,
                 bgColor = setting.BgColor,
                 fontSize = setting.FontSize,
-                lastPage = setting.LastPage
+                lastPage = setting.LastPage,
+                cfi = setting.Cfi
             });
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SaveSettings([FromBody] ReadingSetting dto)
@@ -147,6 +157,7 @@ namespace JBook.Controllers
                 setting.BgColor = dto.BgColor;
                 setting.FontSize = dto.FontSize;
                 setting.LastPage = dto.LastPage;
+                setting.Cfi = dto.Cfi;
             }
             await _context.SaveChangesAsync();
             return Ok();

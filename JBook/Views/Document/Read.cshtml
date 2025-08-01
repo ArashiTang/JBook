@@ -99,15 +99,20 @@
     </div>
 </div>
 
+
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3/dist/epub.min.js"></script>
     <script>
         (async function(){
           const documentId = @documentId;
           const url        = @Html.Raw(JsonSerializer.Serialize(fileUrl));
           const ext        = @Html.Raw(JsonSerializer.Serialize(ext));
           const container  = document.getElementById('reader-container');
+        let rendition,book;
 
-          let { theme, bgColor, fontSize, lastPage } =
+        
+          let { theme, bgColor, fontSize, lastPage,cfi } =
             await fetch(`/Document/GetSettings/${documentId}`)
               .then(r => r.json());
 
@@ -115,6 +120,7 @@
           bgColor  ||= '#ffffff';
           fontSize ||= 16;
           lastPage ||= 0;
+		  cfi ||= '';
 
           let currentIndex = lastPage;
           let pages = [];
@@ -162,10 +168,23 @@
                 Theme:      theme,
                 BgColor:    bgColor,
                 FontSize:   fontSize,
-                LastPage:   currentIndex
+                LastPage:   currentIndex,
+                Cfi : cfi
               })
             });
           }
+
+        if (ext === 'epub') {
+             book      = ePub(url);
+             rendition = book.renderTo(container, { width: '100%', height: '100%' ,allowScript:true,allowSameOrigin:true});
+            if (cfi) rendition.display(cfi);
+            else rendition.display();
+            rendition.on('relocated',loc => {
+              currentIndex = loc.start.index;
+              cfi = loc.start.cfi;
+              persist();
+            });
+        }
 
           document.getElementById('nightBtn').onclick = ()=>{
             theme = theme==='dark' ? 'light' : 'dark';
@@ -199,29 +218,51 @@
             applyStyles(); persist();
           };
 
-          document.getElementById('tocBtn').onclick = ()=>{
-            const tocList = document.getElementById('toc-list');
-            tocList.innerHTML = '';
-            if (ext==='txt') {
-              pages.forEach((p,i)=>{
-                let titleLine = p.split('\n')[0].trim() || `第${i+1}页`;
+        document.getElementById('tocBtn').onclick = () => {
+          const tocList = document.getElementById('toc-list');
+          tocList.innerHTML = '';
+
+          if (ext === 'txt') {
+            pages.forEach((p, i) => {
+              let titleLine = p.split('\n')[0].trim() || `第${i+1}页`;
+              const li = document.createElement('li');
+              li.innerHTML = `<a href="#" style="color:#fff;">${titleLine}</a>`;
+              li.onclick = e => {
+                e.preventDefault();
+                showPage(i);
+                document.getElementById('toc-modal').style.display = 'none';
+              };
+              tocList.appendChild(li);
+            });
+          }
+          else if (ext === 'epub') {
+            book.loaded.navigation.then(toc => {
+              toc.forEach(item => {
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="#" style="color:#fff;">${titleLine}</a>`;
-                li.onclick = e=>{
+                const a  = document.createElement('a');
+                a.textContent = item.label;
+                a.href = '#';
+                a.style.color = '#fff';
+                a.onclick = e => {
                   e.preventDefault();
-                  showPage(i);
+                  rendition.display(item.href);
                   document.getElementById('toc-modal').style.display = 'none';
                 };
+                li.appendChild(a);
                 tocList.appendChild(li);
               });
-            } else {
-              tocList.innerHTML = '<li>No directory</li>';
-            }
-            document.getElementById('toc-modal').style.display = 'block';
-          };
-          document.getElementById('closeToc').onclick = ()=>{
-            document.getElementById('toc-modal').style.display = 'none';
-          };
+            });
+          }
+          else {
+            tocList.innerHTML = '<li style="color:#fff;">No directory</li>';
+          }
+
+          document.getElementById('toc-modal').style.display = 'block';
+        };
+
+        document.getElementById('closeToc').onclick = () => {
+          document.getElementById('toc-modal').style.display = 'none';
+        };
 
           function showPage(idx) {
             if (idx < 0) idx = 0;
@@ -234,10 +275,13 @@
 
           document.getElementById('prevPage').onclick = ()=> {
             if (ext==='txt') showPage(currentIndex - 1);
+			else if (ext==='epub') rendition.prev();
           };
           document.getElementById('nextPage').onclick = ()=> {
             if (ext==='txt') showPage(currentIndex + 1);
+			else if (ext==='epub') rendition.next();    
           };
+
 
 
           if (ext==='pdf') {
@@ -259,12 +303,14 @@
                 pages.push(all.slice(i, i+chunkSize));
               }
             }
-            
+
             showPage(currentIndex);
             return;
           }
 
-          container.innerText = 'Not supported file format';
+           if (ext !== 'epub') {
+             container.innerText = 'Not supported file format';
+           }
         })();
     </script>
 }
