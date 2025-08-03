@@ -1,0 +1,204 @@
+﻿@model JBook.Shared.Models.CombinedSearchResult
+
+@{
+    ViewData["Title"] = "Search Results";
+    // Get search keyword, format counts, selected format from ViewBag
+    var keyword = ViewBag.Keyword as string ?? "";
+    var counts = ViewBag.FormatCounts as IDictionary<string, int>
+                 ?? new Dictionary<string, int>();
+    var selFormat = ViewBag.SelectedFormat as string;
+    var formats = new[] { "TXT", "EPUB", "MOBI", "PDF", "Other" };
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+@* Show report success info if available *@
+@if (TempData["ReportSuccess"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["ReportSuccess"]
+    </div>
+}
+
+<div class="search-results-page">
+    <!-- Top search bar -->
+    <div class="top-search-container">
+        <form method="get" asp-controller="Search" asp-action="Result" class="d-flex">
+            <input type="text"
+                   name="keyword"
+                   placeholder="Book Title or Author Name"
+                   class="form-control me-2"
+                   style="width: 550px; padding: 10px; font-size: 16px;"
+                   value="@keyword" />
+            @* If format is selected, keep as hidden field *@
+            @if (!string.IsNullOrEmpty(selFormat))
+            {
+                <input type="hidden" name="format" value="@selFormat" />
+            }
+            <button type="submit" class="btn btn-warning">Search</button>
+        </form>
+    </div>
+
+    <!-- Format filter bar -->
+    <div class="format-filters mb-3 text-center">
+        @foreach (var fmt in formats)
+        {
+            var cnt = counts.ContainsKey(fmt) ? counts[fmt] : 0;
+            var isSelected = fmt == selFormat;
+            var style = isSelected ? "font-weight:bold; text-decoration:underline;" : "";
+
+            <a asp-action="Result"
+               asp-route-keyword="@keyword"
+               asp-route-format="@fmt"
+               style="@style"
+               class="mx-1">
+                @* Output as plain text *@
+                @($"{fmt}({cnt})")
+            </a>
+
+            @* Add separator except for last one *@
+            @if (fmt != formats.Last())
+            {
+                <text> |</text>
+            }
+        }
+
+        @* "Clear filter" link if filter applied *@
+        @if (!string.IsNullOrEmpty(selFormat))
+        {
+            <text>&nbsp;&nbsp;</text>
+            <a asp-action="Result"
+               asp-route-keyword="@keyword"
+               class="text-secondary">
+                Clear filter
+            </a>
+        }
+    </div>
+
+    <!-- Frosted-glass main content wrapper -->
+    <div class="search-results-frosted">
+        <!-- Main two-column result layout -->
+        <div class="results-container d-flex" style="gap:30px;">
+            <!-- Left: User shared book links -->
+            <div class="col-left flex-grow-2">
+                @if (Model.UserBooks.Any())
+                {
+                    <div class="section user-links">
+                        @foreach (var b in Model.UserBooks)
+                        {
+                            <div class="book-item mb-3">
+                                <div class="book-header mb-1" style="font-size:16px;">
+                                    <span class="book-title text-dark">@b.Title</span>
+                                    <span class="book-author text-dark">— @b.Author</span>
+                                    <span class="book-format text-dark">(@b.Format)</span>
+                                </div>
+                                <div class="book-description mb-1 text-muted">@b.Description</div>
+                                <div class="book-actions">
+                                    <a href="@b.Url" target="_blank" class="me-2">Link</a>
+                                    <a asp-controller="Report"
+                                       asp-action="Create"
+                                       asp-route-linkId="@b.Id"
+                                       asp-route-returnUrl="@returnUrl"
+                                       class="report">
+                                        Report
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Right: Crawler/book search engine results -->
+            <div class="col-right flex-grow-1 border-start ps-3">
+                <!-- Z-Library results section -->
+                <div class="section zlib-results mb-4">
+                    <h4>Z-Library Results</h4>
+                    @if (Model.ZLibraryBooks.Any())
+                    {
+                        <ul class="list-unstyled">
+                            @foreach (var b in Model.ZLibraryBooks)
+                            {
+                                <li class="mb-2">
+                                    <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No Z-Library results.</p>
+                    }
+                </div>
+
+                <!-- OpenLibrary results section -->
+                <div class="section openlib-results">
+                    <h4>OpenLibrary Results</h4>
+                    @if (Model.OpenLibraryBooks.Any())
+                    {
+                        <ul class="list-unstyled">
+                            @foreach (var b in Model.OpenLibraryBooks)
+                            {
+                                <li class="mb-2">
+                                    <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No OpenLibrary results.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Main search results page style */
+        .search-results-page {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Top search bar area */
+        .top-search-container {
+            margin-bottom: 20px;
+        }
+
+        /* Format filter bar style */
+        .format-filters {
+            color: #fff;
+        }
+
+            .format-filters a {
+                color: #fff !important;
+                font-size: 14px;
+            }
+
+        /* Frosted-glass content wrapper */
+        .search-results-frosted {
+            background: rgba(255,255,255,0.72);
+            border-radius: 28px;
+            box-shadow: 0 6px 32px 0 rgba(60,60,60,0.09), 0 1.5px 6px 0 rgba(60,60,60,0.06);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 32px 36px 36px 36px;
+            margin: 0 auto 40px auto;
+            max-width: 1240px;
+            min-height: 540px;
+            transition: box-shadow .3s;
+            border: none;
+        }
+
+        .results-container {
+            margin-top: 20px;
+        }
+
+        /* Book item header spacing */
+        .book-item .book-header span {
+            margin-right: 8px;
+        }
+    </style>
+}

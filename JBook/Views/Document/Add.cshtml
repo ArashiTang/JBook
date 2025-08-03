@@ -1,0 +1,73 @@
+﻿@model JBook.Models.Document
+
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<!-- Outer flex container centers the form vertically and horizontally, with top/bottom padding -->
+<div style="min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent;">
+    <!-- White card with shadow and rounded corners for form area -->
+    <div style="background: rgba(255,255,255,0.85); border-radius: 18px; box-shadow: 0 6px 32px #00000018; padding: 48px 32px 32px 32px; min-width: 350px; max-width: 400px; width: 100%;">
+        <!-- Page title -->
+        <h2 class="mb-4 text-center" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; letter-spacing: 1px; color: #222;">Add Book</h2>
+        <!-- Book upload form -->
+        <form asp-action="Add" method="post" enctype="multipart/form-data" style="width: 100%;">
+            <!-- Display all validation messages -->
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <!-- Book title input (required) -->
+            <div class="mb-3">
+                <label for="Title" class="form-label" style="font-weight:500;">Book Title <span style="color:#f55;">*</span></label>
+                <input id="Title" name="Title" class="form-control" style="height:48px; font-size:1.1em;" />
+            </div>
+
+            <!-- Author input (required) -->
+            <div class="mb-3">
+                <label for="Author" class="form-label" style="font-weight:500;">Author Name <span style="color:#f55;">*</span></label>
+                <input id="Author" name="Author" class="form-control" style="height:48px; font-size:1.1em;" />
+            </div>
+
+            <!-- File upload input (only .txt, .pdf, .epub) -->
+            <div class="mb-3">
+                <label for="File" class="form-label" style="font-weight:500;">Upload File <span style="color:#f55;">*</span></label>
+                <input id="File"
+                       name="File"
+                       type="file"
+                       class="form-control"
+                       accept=".txt,.pdf,.epub"
+                       style="height:48px; font-size:1.1em;"
+                       required />
+                <div class="form-text" style="font-size:0.98em;">
+                    Only <code>.txt</code>, <code>.pdf</code> or <code>.epub</code> files are allowed.
+                </div>
+            </div>
+
+            <!-- Action buttons: Publish and Cancel, aligned horizontally -->
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="submit" class="btn btn-success px-5" style="font-size:1.1em; font-weight: bold; background: #ffe358; color: #222; border:none; border-radius: 10px;">Publish</button>
+                <a asp-action="Bookshelf" class="btn btn-secondary px-4" style="font-size:1.08em; border-radius: 10px;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Only allow .txt, .pdf, .epub file uploads
+        document.getElementById('File').addEventListener('change', function () {
+          const allowed = ['txt','pdf','epub'];
+          const file = this.files[0];
+          if (file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!allowed.includes(ext)) {
+              alert('Only .txt, .pdf or .epub files are allowed.');
+              this.value = '';
+            }
+          }
+        });
+    </script>
+}
