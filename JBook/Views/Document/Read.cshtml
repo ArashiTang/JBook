@@ -155,8 +155,10 @@
             container.style.background       = 'transparent';
             if (rendition) {
                 rendition.themes.fontSize(fontSize + 'px');
+                rendition.themes.select(theme);
             }
           }
+          const nightBtn = document.getElementById('nightBtn');
           applyStyles();
 
           async function persist() {
@@ -176,9 +178,16 @@
 
         if (ext === 'epub') {
              book      = ePub(url);
-                 rendition = book.renderTo(container, { width: '100%', height: '100%' ,allowScript:true,allowSameOrigin:true,});
-            if (cfi) rendition.display(cfi);
-            else rendition.display();
+                 rendition = book.renderTo(container, { width: '100%', height: '100%' ,allowScript:true,allowSameOrigin:true,spread:'none'});
+            rendition.themes.register('light', {
+              'body': { 'background': '#ffffff', 'color': '#000000' }
+            });
+            rendition.themes.register('dark', {
+              'body': { 'background': '#000000', 'color': '#ffffff' }
+            });
+
+            rendition.display(cfi || undefined);
+
             rendition.on('relocated',loc => {
               currentIndex = loc.start.index;
               cfi = loc.start.cfi;
@@ -186,13 +195,14 @@
             });
         }
 
-          document.getElementById('nightBtn').onclick = ()=>{
+          nightBtn.onclick = ()=>{
             theme = theme==='dark' ? 'light' : 'dark';
             bgColor = theme==='dark' ? '#000' : '#ffffff';
-			textColor = theme==='white' ? '#fff' : 
+			textColor = theme==='white' ? '#fff' :
+            nightBtn.innerText = (theme == 'dark')?'🌙':'☀️';
             applyStyles();
             persist();
-            nightBtn.innerText = (theme == 'dark')?'🌙':'☀️';
+            
           };
 
           document.getElementById('settingBtn').onclick = ()=>{
@@ -218,12 +228,7 @@
             applyStyles(); persist();
           };
 
-        if (ext === 'epub') {
-          book = ePub(url);
-          rendition = book.renderTo(container, { width:'100%', height:'100%' });
-          rendition.display(cfi || undefined);
-          rendition.on('relocated', loc => { /* … */ });
-        }
+
 
         document.getElementById('tocBtn').onclick = () => {
           const tocList = document.getElementById('toc-list');

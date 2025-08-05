@@ -25,16 +25,16 @@
                         {
                             <img src="~/@doc.CoverPath"
                                  class="card-img-top img-fluid"
-                                 style="max-height:210px; object-fit:cover;"
+                                 style="max-height:210px;display:block;"
                                  alt="@doc.Title" />
                         }
                         else
                         {
                             <div class="card-img-top position-relative d-flex align-items-center justify-content-center p-0"
                                  style="height:210px; overflow:hidden;">
-                                <img src="~/img/default-cover.png"
+                                <img src="~/img/default-cover.jpg"
                                      alt="Default Cover"
-                                     style="width:100%; height:100%; object-fit:cover; display:block;" />
+                                     style="width:100%; height:210px;display:block;" />
                                 <!-- Overlay: show title clickable area -->
                                 <a asp-action="Read" asp-route-id="@doc.Id"
                                    class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
