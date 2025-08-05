@@ -1,28 +1,76 @@
 ﻿@model IEnumerable<JBook.Models.Document>
-@{
-    ViewData["Title"] = "Bookshelf";
-}
-<h2>My BookShelf</h2>
-<p>
-    <a asp-action="Add" class="btn btn-primary">ADD</a>
-</p>
+@using System.IO
 
-@if (!Model.Any())
-{
-    <p>None Book。</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var Document in Model)
+<!-- Bookshelf header image (title/visual element) -->
+<div style="width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 40px; margin-bottom: 40px;">
+    <img src="~/img/MyBookshelf.png" alt="My Bookshelf" style="max-width: 320px; width: 100%; height: auto; filter: drop-shadow(0 2px 14px #00000044);" />
+</div>
+
+<!-- Main frosted-glass bookshelf content card -->
+<div class="container bookshelf-content-blur">
+    <div class="row gx-3 gy-4">
+        @foreach (var doc in Model)
         {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><a asp-action="Read" asp-route-id="@Document.Id">@Document.Title </a></span>
-                <form asp-action="Delete" method="post" style="margin:0">
-                    <input type="hidden" name="id" value="@Document.Id" />
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </li>
+            <!-- One book card in bookshelf -->
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="card h-100 text-center shadow-sm" style="min-height:300px;">
+                    <!-- Book cover (click to read) -->
+                    <a asp-action="Read" asp-route-id="@doc.Id" class="d-block">
+                        @{
+                            string filePath = doc.FilePath ?? "";
+                            string ext = System.IO.Path.GetExtension(filePath)?.ToLowerInvariant() ?? "";
+                        }
+                        @* Show custom cover for EPUB if available, else show default cover *@
+                        @if (ext == ".epub" && !string.IsNullOrEmpty(doc.CoverPath))
+                        {
+                            <img src="~/@doc.CoverPath"
+                                 class="card-img-top img-fluid"
+                                 style="max-height:210px;display:block;"
+                                 alt="@doc.Title" />
+                        }
+                        else
+                        {
+                            <div class="card-img-top position-relative d-flex align-items-center justify-content-center p-0"
+                                 style="height:210px; overflow:hidden;">
+                                <img src="~/img/default-cover.jpg"
+                                     alt="Default Cover"
+                                     style="width:100%; height:210px;display:block;" />
+                                <!-- Overlay: show title clickable area -->
+                                <a asp-action="Read" asp-route-id="@doc.Id"
+                                   class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+                                   style="top:0; left:0; color:#fff; font-size:1.2rem; font-weight:600; text-shadow:0 2px 8px #333; background:rgba(0,0,0,0.08); text-decoration:none;">
+                                    <span class="small text-center">@doc.Title</span>
+                                </a>
+                            </div>
+                        }
+                    </a>
+                    <div class="card-body p-2">
+                        <!-- Book title -->
+                        <h5 class="card-title small text-truncate" title="@doc.Title">
+                            @doc.Title
+                        </h5>
+                        <!-- Delete book button/form -->
+                        <form asp-action="Delete" method="post" class="mt-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@doc.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         }
-    </ul>
-}
+
+        <!-- Add new book card (always last) -->
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <a asp-action="Add"
+               class="card h-100 text-center border-dashed d-flex align-items-center justify-content-center">
+                <div>
+                    <i class="fas fa-plus fa-2x"></i>
+                    <p class="mt-2 small">Add Book</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

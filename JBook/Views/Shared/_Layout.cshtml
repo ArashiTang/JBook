@@ -4,26 +4,53 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - JBook</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Site custom styles -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JBook.styles.css" asp-append-version="true" />
 
     @RenderSection("Styles", required: false)
+
+    <!-- Custom page background and Google-like center layout -->
+    <style>
+        body.custom-bg {
+            background: url('/img/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .google-center {
+            min-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
-<body>
+
+<!-- Set custom background class on body -->
+<body class="custom-bg">
+    <!-- Main navigation bar -->
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <!-- Navbar toggle for mobile -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <!-- Navbar content -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                    @* Interaction keys on the left side of the navigation bar *@
+                    @* Left side: logo and main navigation links *@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">JBook</a>
+                            <!-- Logo (migrated from v0.4) -->
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="padding:0;">
+                                <img src="~/img/nav-logo.png" alt="JBook" style="height:44px; width:auto; vertical-align:middle;">
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a id="nav-share" class="nav-link text-dark" asp-area="" asp-controller="Share" asp-action="ShareLink">Share</a>
@@ -33,21 +60,24 @@
                         </li>
                     </ul>
 
-                    @* Interaction keys on the right side of the navigation bar *@
+                    @* Right side: user authentication and admin entry *@
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <!-- Show Manager menu if user is Admin -->
                             if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Manager" asp-action="Manager">Manager</a>
                                 </li>
                             }
+                            <!-- Show welcome message and logout -->
                             <li class="nav-item">
                                 <span class="nav-link">Welcome, @User.Identity.Name</span>
                             </li>
                             <li class="nav-item">
                                 <form method="post" asp-controller="Account" asp-action="Logout" class="d-inline">
+                                    <!-- CSRF protection token -->
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="nav-link btn btn-link">Quit</button>
                                 </form>
@@ -55,6 +85,7 @@
                         }
                         else
                         {
+                            <!-- Login/Register links for anonymous users -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
                             </li>
@@ -68,23 +99,23 @@
         </nav>
     </header>
 
+    <!-- Main content container -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <!-- Login Modal -->
+    <!-- Login Modal window -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-4">
                 <form asp-controller="Account" asp-action="Login" method="post">
+                    <!-- CSRF protection -->
                     @Html.AntiForgeryToken()
                     <h5 class="mb-3">Login</h5>
-
-                    <!-- Error Input (initially hidden) -->
+                    <!-- Login error message area (initially hidden) -->
                     <div id="loginErrorMsg" class="alert alert-danger d-none" role="alert"></div>
-
                     <div class="mb-2">
                         <label class="form-label">Email</label>
                         <input type="email" name="Email" class="form-control" required />
@@ -102,11 +133,12 @@
         </div>
     </div>
 
-    <!-- Register Modal -->
+    <!-- Register Modal window -->
     <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-4">
                 <form asp-controller="Account" asp-action="Register" method="post">
+                    <!-- CSRF protection -->
                     @Html.AntiForgeryToken()
                     <h5 class="mb-3">Register</h5>
                     <div class="mb-2">
@@ -134,13 +166,14 @@
         </div>
     </div>
 
+    <!-- Footer section -->
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - JBook - <a asp-area="" asp-controller="Privacy" asp-action="Index">Privacy</a>
+            &copy; 2025 - JBook - <a asp-area="" asp-controller="Privacy" asp-action="jidonglitihudun">Privacy</a>
         </div>
     </footer>
 
-    <!-- Rendering after wrongly input -->
+    <!-- If login fails, show login modal and error -->
     @if (TempData["LoginError"] != null)
     {
         <script>
@@ -159,11 +192,12 @@
         </script>
     }
 
+    <!-- Core JS dependencies -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(function(){
-            // Switch between login/register modals
+            // Switch between login and register modal dialogs
             $('#switch-to-register').click(e => {
                 e.preventDefault();
                 $('#loginModal').modal('hide');
@@ -175,7 +209,7 @@
                 $('#loginModal').modal('show');
             });
 
-            // Intercept Share link: if not authenticated, force login modal
+            // Share link intercept: show login if not authenticated
             $('#nav-share').click(e => {
                 var isAuth = '@(User.Identity.IsAuthenticated)'.toLowerCase() === 'true';
                 if (!isAuth) {

@@ -3,53 +3,52 @@
     ViewData["Title"] = "Share a Book";
 }
 
-<h2>Share a Book</h2>
+<!-- 外层虚化居中容器（新布局） -->
+<div class="form-center-blur">
 
-<!-- Success message -->
-@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
-{
-    <div class="alert alert-success">
-        @ViewBag.SuccessMessage
-    </div>
-}
+    <h2 class="form-title text-center">Share a Book</h2>
 
-<form asp-action="ShareLink" method="post">
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label">Title *</label>
-        <input asp-for="Title" class="form-control" maxlength="100" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+    <!-- Success message -->
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            @ViewBag.SuccessMessage
+        </div>
+    }
 
-    <div class="mb-3">
-        <label asp-for="Author" class="form-label">Author</label>
-        <input asp-for="Author" class="form-control" maxlength="100" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Format" class="form-label">Format</label>     
-        <select asp-for="Format" class="form-control" required>
-            <option value="TXT">TXT</option>
-            <option value="EPUB">EPUB</option>
-            <option value="MOBI">MOBI</option>
-            <option value="PDF">PDF</option>
-            <option value="Other">Other</option>
-        </select>
-        <span asp-validation-for="Format" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label">Description</label>
-        <input asp-for="Description" class="form-control" maxlength="100" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Url" class="form-label">Url *</label>
-        <input asp-for="Url" class="form-control" maxlength="500" />
-        <span asp-validation-for="Url" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <!-- 表单主体 -->
+    <form asp-action="ShareLink" method="post" class="book-form">
+        <div class="form-group">
+            <label for="Title" class="form-label">Title <span class="text-danger">*</span></label>
+            <input asp-for="Title" class="form-control" maxlength="100" id="Title" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Author" class="form-label">Author</label>
+            <input asp-for="Author" class="form-control" maxlength="100" id="Author" />
+        </div>
+        <div class="form-group">
+            <label for="Format" class="form-label">Format</label>
+            <select asp-for="Format" class="form-control" id="Format">
+                <option value="TXT">TXT</option>
+                <option value="EPUB">EPUB</option>
+                <option value="MOBI">MOBI</option>
+                <option value="PDF">PDF</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Description" class="form-label">Description</label>
+            <input asp-for="Description" class="form-control" maxlength="100" id="Description" />
+        </div>
+        <div class="form-group">
+            <label for="Url" class="form-label">Url <span class="text-danger">*</span></label>
+            <input asp-for="Url" class="form-control" maxlength="500" id="Url" />
+            <span asp-validation-for="Url" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success submit-btn">Submit</button>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

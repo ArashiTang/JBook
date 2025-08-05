@@ -72,77 +72,79 @@
         }
     </div>
 
-    <!-- Main two-column layout -->
-    <div class="results-container d-flex" style="gap:30px;">
-        <!-- Left side: User shared links -->
-        <div class="col-left flex-grow-2">
-            @if (Model.UserBooks.Any())
-            {
-                <div class="section user-links">
-                    <h4>Your Shared Links</h4>
-                    @foreach (var b in Model.UserBooks)
-                    {
-                        <div class="book-item mb-3">
-                            <div class="book-header mb-1" style="font-size:16px;">
-                                <span class="book-title text-dark">@b.Title</span>
-                                <span class="book-author text-dark">— @b.Author</span>
-                                <span class="book-format text-dark">(@b.Format)</span>
-                            </div>
-                            <div class="book-description mb-1 text-muted">@b.Description</div>
-                            <div class="book-actions">
-                                <a href="@b.Url" target="_blank" class="me-2">Link</a>
-                                <a asp-controller="Report"
-                                   asp-action="Create"
-                                   asp-route-linkId="@b.Id"
-                                   asp-route-returnUrl="@returnUrl"
-                                   class="report">
-                                    Report
-                                </a>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-
-        <!-- Right side: crawler results -->
-        <div class="col-right flex-grow-1 border-start ps-3">
-            <div class="section zlib-results mb-4">
-                <h4>Z-Library Results</h4>
-                @if (Model.ZLibraryBooks.Any())
+    <!-- 新增淡化虚化外壳 -->
+    <div class="search-results-frosted">
+        <!-- Main two-column layout -->
+        <div class="results-container d-flex" style="gap:30px;">
+            <!-- Left side: User shared links -->
+            <div class="col-left flex-grow-2">
+                @if (Model.UserBooks.Any())
                 {
-                    <ul class="list-unstyled">
-                        @foreach (var b in Model.ZLibraryBooks)
+                    <div class="section user-links">
+                        @foreach (var b in Model.UserBooks)
                         {
-                            <li class="mb-2">
-                                <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
-                            </li>
+                            <div class="book-item mb-3">
+                                <div class="book-header mb-1" style="font-size:16px;">
+                                    <span class="book-title text-dark">@b.Title</span>
+                                    <span class="book-author text-dark">— @b.Author</span>
+                                    <span class="book-format text-dark">(@b.Format)</span>
+                                </div>
+                                <div class="book-description mb-1 text-muted">@b.Description</div>
+                                <div class="book-actions">
+                                    <a href="@b.Url" target="_blank" class="me-2">Link</a>
+                                    <a asp-controller="Report"
+                                       asp-action="Create"
+                                       asp-route-linkId="@b.Id"
+                                       asp-route-returnUrl="@returnUrl"
+                                       class="report">
+                                        Report
+                                    </a>
+                                </div>
+                            </div>
                         }
-                    </ul>
-                }
-                else
-                {
-                    <p>No Z-Library results.</p>
+                    </div>
                 }
             </div>
 
-            <div class="section openlib-results">
-                <h4>OpenLibrary Results</h4>
-                @if (Model.OpenLibraryBooks.Any())
-                {
-                    <ul class="list-unstyled">
-                        @foreach (var b in Model.OpenLibraryBooks)
-                        {
-                            <li class="mb-2">
-                                <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
-                            </li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p>No OpenLibrary results.</p>
-                }
+            <!-- Right side: crawler results -->
+            <div class="col-right flex-grow-1 border-start ps-3">
+                <div class="section zlib-results mb-4">
+                    <h4>Z-Library Results</h4>
+                    @if (Model.ZLibraryBooks.Any())
+                    {
+                        <ul class="list-unstyled">
+                            @foreach (var b in Model.ZLibraryBooks)
+                            {
+                                <li class="mb-2">
+                                    <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No Z-Library results.</p>
+                    }
+                </div>
+
+                <div class="section openlib-results">
+                    <h4>OpenLibrary Results</h4>
+                    @if (Model.OpenLibraryBooks.Any())
+                    {
+                        <ul class="list-unstyled">
+                            @foreach (var b in Model.OpenLibraryBooks)
+                            {
+                                <li class="mb-2">
+                                    <a href="@b.Url" target="_blank">@b.Title — @b.Author</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No OpenLibrary results.</p>
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -159,9 +161,28 @@
             margin-bottom: 20px;
         }
 
-        .format-filters a {
-            color: #333;
-            font-size: 14px;
+        .format-filters {
+            color: #fff;
+        }
+
+            .format-filters a {
+                color: #fff !important;
+                font-size: 14px;
+            }
+
+        /* 新增虚化磨砂外壳 */
+        .search-results-frosted {
+            background: rgba(255,255,255,0.72);
+            border-radius: 28px;
+            box-shadow: 0 6px 32px 0 rgba(60,60,60,0.09), 0 1.5px 6px 0 rgba(60,60,60,0.06);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 32px 36px 36px 36px;
+            margin: 0 auto 40px auto;
+            max-width: 1240px;
+            min-height: 540px;
+            transition: box-shadow .3s;
+            border: none;
         }
 
         .results-container {
@@ -170,6 +191,112 @@
 
         .book-item .book-header span {
             margin-right: 8px;
+        }
+
+        .format-filters {
+            color: #FFD600 !important; /* 亮黄 */
+        }
+
+            .format-filters a {
+                color: #FFD600 !important; /* 所有格式链接始终亮黄 */
+                font-size: 14px;
+                font-weight: normal;
+                text-decoration: none;
+                transition: color .2s;
+            }
+
+                .format-filters a[style*="font-weight:bold"] {
+                    font-weight: bold;
+                    text-decoration: underline;
+                    color: #FFD600 !important;
+                }
+
+        .col-right {
+            flex-grow: 0 !important; /* 不自适应宽度 */
+            width: 340px !important; /* 固定宽度，自行调整宽度 */
+            min-width: 300px;
+            max-width: 420px;
+            border-left: 1px solid #ddd;
+            padding-left: 32px;
+            font-size: 14px;
+            position: absolute; /* 绝对定位到右侧 */
+            top: 90px; /* 距离页面顶部留白，具体数值可调 */
+            right: 80px; /* 距离右侧的距离，可根据实际页面调整 */
+            background: transparent; /* 保持原透明 */
+            z-index: 2;
+        }
+
+
+
+
+            .col-right h4 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .col-right ul, .col-right li, .col-right p {
+                font-size: 13px;
+            }
+
+        .col-left {
+            margin-left: 110px; 
+        }
+
+
+
+        .book-header {
+            font-size: 28px !important; 
+            line-height: 1.2;
+            font-family: "Libertinus Serif", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .book-title {
+
+        }
+
+
+
+
+
+
+
+
+
+
+        .book-author{
+            font-size: 18px
+
+        }
+
+
+
+
+
+        .book-header .book-format {
+            font-size: 16px !important; /* 例如18px，根据实际页面大小调整 */
+
+        }
+
+
+        .book-description {
+            font-size: 16px !important;
+            color: #888;
+            margin-bottom: 4px;
+            font-family: "Libertinus Serif", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .book-actions a {
+            font-size: 16px !important;
+            /* 可以额外加点行距美观 */
+            margin-right: 8px;
+        }
+
+        .book-item {
+            margin-bottom: 56px !important; /* 你想要的间隔 */
         }
     </style>
 }
