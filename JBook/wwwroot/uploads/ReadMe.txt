@@ -5,6 +5,7 @@ This document is a user guide.
 1. Index page: In the index page you can search the source of the book based on the title and author name. And you can choose the source format
 
 2. Share page: After you login, you can share the source of one book(URL). Then you will be able to find your share when conducting a search.
+If you find a Url that is unusable, you can also report that link.
 
 !!(If you have an administrator account, you will be able to manage the shared resources that have been reported. )!!!
 
