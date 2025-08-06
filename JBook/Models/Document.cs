@@ -14,7 +14,7 @@ namespace JBook.Models
 
         public string? ContentType { get; set; }
 
-        public DateTime UploadedAt { get; set; }
+        //public DateTime UploadedAt { get; set; }
 
         public string? CoverPath { get; set; }
         //public string? CoverImage { get; set; }

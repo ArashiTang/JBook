@@ -154,6 +154,12 @@
             fontSizeDisplay.textContent = fontSize + 'px';
             container.style.background       = bgColor;
             if (rendition) {
+                rendition.themes.register('light', {
+                  'body': {
+                    'background': bgColor,
+                    'color':      textColor
+                  }
+                });
                 rendition.themes.select(theme);
                 rendition.themes.fontSize(fontSize + 'px');
                 
@@ -181,9 +187,7 @@
 
              book      = ePub(url);
                  rendition = book.renderTo(container, { width: '100%', height: '100%' ,allowScript:true,allowSameOrigin:true,spread:'none'});
-            rendition.themes.register('light', {
-              'body': { 'background': '#ffffff', 'color': '#000000' }
-            });
+            
             rendition.themes.register('dark', {
               'body': { 'background': '#000000', 'color': '#ffffff' }
             });
@@ -192,6 +196,8 @@
                     rendition.themes.select(theme);
                     rendition.themes.fontSize(fontSize + 'px');
              }
+
+			 applyStyles();
 
             rendition.display(cfi || undefined);
 

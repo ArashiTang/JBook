@@ -45,3 +45,19 @@ C:\Users\24839\Desktop\study work\INFT3050\JBook\JBookCrawler\obj\Debug\net8.0\J
 C:\Users\24839\Desktop\study work\INFT3050\JBook\JBookCrawler\obj\Debug\net8.0\refint\JBookCrawler.dll
 C:\Users\24839\Desktop\study work\INFT3050\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.pdb
 C:\Users\24839\Desktop\study work\INFT3050\JBook\JBookCrawler\obj\Debug\net8.0\ref\JBookCrawler.dll
+D:\Git_source\JBook\JBookCrawler\bin\Debug\net8.0\JBookCrawler.deps.json
+D:\Git_source\JBook\JBookCrawler\bin\Debug\net8.0\JBookCrawler.dll
+D:\Git_source\JBook\JBookCrawler\bin\Debug\net8.0\JBookCrawler.pdb
+D:\Git_source\JBook\JBookCrawler\bin\Debug\net8.0\JBook.Shared.Models.dll
+D:\Git_source\JBook\JBookCrawler\bin\Debug\net8.0\JBook.Shared.Models.pdb
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.csproj.AssemblyReference.cache
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.AssemblyInfoInputs.cache
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.AssemblyInfo.cs
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.csproj.CoreCompileInputs.cache
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.sourcelink.json
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCra.8489EF6F.Up2Date
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.dll
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\refint\JBookCrawler.dll
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\JBookCrawler.pdb
+D:\Git_source\JBook\JBookCrawler\obj\Debug\net8.0\ref\JBookCrawler.dll
