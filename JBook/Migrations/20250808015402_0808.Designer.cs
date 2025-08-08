@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JBook.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20250805072238_0805")]
-    partial class _0805
+    [Migration("20250808015402_0808")]
+    partial class _0808
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,12 +140,44 @@ namespace JBook.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.ToTable("Documents");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Author = "Martin, George R.R.",
+                            ContentType = "application/epub",
+                            CoverPath = "covers/1.jpg",
+                            FilePath = "uploads\\A Song of Ice and Fire.epub",
+                            Title = "A Song of Ice and Fire"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Author = "Victor Hugo",
+                            ContentType = "text/plain",
+                            FilePath = "uploads\\The Count of Monte Cristo.txt",
+                            Title = "The Count of Monte Cristo"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Author = "None",
+                            ContentType = "application/pdf",
+                            FilePath = "uploads\\Week 5 - How to work with Views_V02.pdf",
+                            Title = "WEEK 5"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Author = "JBMan",
+                            ContentType = "text/plain",
+                            FilePath = "uploads\\ReadMe.txt",
+                            Title = "ReadMe"
+                        });
                 });
 
             modelBuilder.Entity("JBook.Models.ReadingSetting", b =>

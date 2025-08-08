@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Search Results";
-    // 从 ViewBag 拿出 keyword、formatCounts、selectedFormat
+    // Take out keyword, formatCounts, selectedFormat from ViewBag
     var keyword = ViewBag.Keyword as string ?? "";
     var counts = ViewBag.FormatCounts as IDictionary<string, int>
                  ?? new Dictionary<string, int>();
@@ -28,7 +28,7 @@
                    class="form-control me-2"
                    style="width: 550px; padding: 10px; font-size: 16px;"
                    value="@keyword" />
-            @* 如果已经选了格式，要将其作为隐藏字段带上 *@
+            @* If you have selected a format, you want to include it as a hidden field *@
             @if (!string.IsNullOrEmpty(selFormat))
             {
                 <input type="hidden" name="format" value="@selFormat" />
@@ -50,7 +50,7 @@
                asp-route-format="@fmt"
                style="@style"
                class="mx-1">
-                @* 使用 <text> 来让 Razor 输出纯文本 *@
+                @* Use <text> to have Razor output plain text *@
                 @($"{fmt}({cnt})")
             </a>
 
@@ -60,7 +60,7 @@
             }
         }
 
-        @* “清除筛选” 链接 *@
+        @* Clear Filters link *@
         @if (!string.IsNullOrEmpty(selFormat))
         {
             <text>&nbsp;&nbsp;</text>
@@ -72,7 +72,7 @@
         }
     </div>
 
-    <!-- 新增淡化虚化外壳 -->
+    <!-- Added faded blur shell -->
     <div class="search-results-frosted">
         <!-- Main two-column layout -->
         <div class="results-container d-flex" style="gap:30px;">
@@ -170,7 +170,7 @@
                 font-size: 14px;
             }
 
-        /* 新增虚化磨砂外壳 */
+        /* Added blurred frosted shell */
         .search-results-frosted {
             background: rgba(255,255,255,0.72);
             border-radius: 28px;
@@ -194,11 +194,11 @@
         }
 
         .format-filters {
-            color: #FFD600 !important; /* 亮黄 */
+            color: #FFD600 !important; /* Bright yellow */
         }
 
             .format-filters a {
-                color: #FFD600 !important; /* 所有格式链接始终亮黄 */
+                color: #FFD600 !important; /* All format links are always bright yellow */
                 font-size: 14px;
                 font-weight: normal;
                 text-decoration: none;
@@ -212,17 +212,17 @@
                 }
 
         .col-right {
-            flex-grow: 0 !important; /* 不自适应宽度 */
-            width: 340px !important; /* 固定宽度，自行调整宽度 */
+            flex-grow: 0 !important; /* Non-adaptive width */
+            width: 340px !important; /* Fixed width, adjust width by yourself */
             min-width: 300px;
             max-width: 420px;
             border-left: 1px solid #ddd;
             padding-left: 32px;
             font-size: 14px;
-            position: absolute; /* 绝对定位到右侧 */
-            top: 90px; /* 距离页面顶部留白，具体数值可调 */
-            right: 80px; /* 距离右侧的距离，可根据实际页面调整 */
-            background: transparent; /* 保持原透明 */
+            position: absolute; /* Absolute positioning to the right */
+            top: 90px; /* Leave blank space at the top of the page, the specific value is adjustable */
+            right: 80px; /* The distance from the right side can be adjusted according to the actual page */
+            background: transparent; /* Keep the original transparency */
             z-index: 2;
         }
 
@@ -242,8 +242,6 @@
             margin-left: 110px; 
         }
 
-
-
         .book-header {
             font-size: 28px !important; 
             line-height: 1.2;
@@ -256,29 +254,15 @@
 
         }
 
-
-
-
-
-
-
-
-
-
         .book-author{
             font-size: 18px
 
         }
 
-
-
-
-
         .book-header .book-format {
-            font-size: 16px !important; /* 例如18px，根据实际页面大小调整 */
+            font-size: 16px !important; /* For example, 18px, adjust according to the actual page size */
 
         }
-
 
         .book-description {
             font-size: 16px !important;
@@ -291,12 +275,12 @@
 
         .book-actions a {
             font-size: 16px !important;
-            /* 可以额外加点行距美观 */
+            /* You can add some extra line spacing to make it more beautiful */
             margin-right: 8px;
         }
 
         .book-item {
-            margin-bottom: 56px !important; /* 你想要的间隔 */
+            margin-bottom: 56px !important;
         }
     </style>
 }

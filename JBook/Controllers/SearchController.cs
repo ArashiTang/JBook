@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using JBook.Models;
+﻿using JBook.Models;
 using JBook.Shared.Models;
 using JBookCrawler.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +29,7 @@ namespace JBook.Controllers
             if (string.IsNullOrWhiteSpace(keyword))
                 return RedirectToAction("Index", "Home");
 
-            // 首先，从数据库中获取所有匹配关键字的用户分享链接（不区分格式）
+            // First, get all user sharing links matching the keyword from the database (regardless of format)
             var allShared = _db.BookLinks
                 .Where(bl =>
                     EF.Functions.Like(bl.Title, $"%{keyword}%") ||
@@ -49,24 +45,24 @@ namespace JBook.Controllers
                 })
                 .ToList();
 
-            // 统计各格式的数量
+            // Count the number of each format
             var formatCounts = allShared
                 .GroupBy(b => b.Format)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            // 如果传入了 format，则仅保留该格式的分享结果
+            // If a format is passed in, only the sharing results in that format will be retained
             var userUploaded = string.IsNullOrEmpty(format)
                 ? allShared
                 : allShared.Where(b => b.Format == format).ToList();
 
-            // 调用爬虫获取外部数据（数量、过滤不影响爬虫结果）
+            // Call the crawler to obtain external data (quantity and filtering do not affect the crawler results)
             var zlibCrawler = _factory.GetCrawler("zlibrary");
             var openlibCrawler = _factory.GetCrawler("openlibrary");
 
             var zlibResults = zlibCrawler != null ? await zlibCrawler.SearchBooksAsync(keyword) : new List<Book>();
             var openlibResults = openlibCrawler != null ? await openlibCrawler.SearchBooksAsync(keyword) : new List<Book>();
 
-            // 组合最终模型
+            // Combine the final model
             var model = new CombinedSearchResult
             {
                 UserBooks = userUploaded,
@@ -74,10 +70,10 @@ namespace JBook.Controllers
                 OpenLibraryBooks = openlibResults
             };
 
-            // 传递给视图的额外数据
+            // Additional data passed to the view
             ViewBag.Keyword = keyword;
-            ViewBag.SelectedFormat = format;        // 当前选中的格式
-            ViewBag.FormatCounts = formatCounts;  // 各格式数量字典
+            ViewBag.SelectedFormat = format;    // Currently selected format
+            ViewBag.FormatCounts = formatCounts;    // Dictionary of the number of formats
 
             return View(model);
         }

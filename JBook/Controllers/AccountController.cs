@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using JBook.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,7 +19,7 @@ namespace JBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string Email, string Password)
         {
-            // 尝试普通用户表
+            // The normal user table
             var user = _db.Users
                           .FirstOrDefault(u => u.Email == Email && u.Password == Password);
 
@@ -36,7 +33,7 @@ namespace JBook.Controllers
             }
             else
             {
-                // 尝试管理员表
+                // The administrator table
                 var admin = _db.Admins
                                .FirstOrDefault(a => a.Email == Email && a.Password == Password);
 
@@ -50,7 +47,7 @@ namespace JBook.Controllers
                 name = admin.Nickname;
             }
 
-            // 构造 Claims 并写入 Cookie
+            // Construct Claims and write Cookie
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, name),
@@ -71,7 +68,7 @@ namespace JBook.Controllers
             string Password,
             string ConfirmPassword)
         {
-            // 简单校验
+            // Simple verification
             if (Password != ConfirmPassword)
             {
                 TempData["RegisterError"] = "Passwords do not match.";
@@ -83,7 +80,7 @@ namespace JBook.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // 创建并保存新用户
+            // Create and save a new user
             var user = new User
             {
                 Nickname = Nickname,
@@ -93,7 +90,7 @@ namespace JBook.Controllers
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
-            // 自动登录
+            // Automatic login
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Nickname),

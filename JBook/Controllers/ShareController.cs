@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using JBook.Models;
 
 namespace JBook.Controllers
@@ -17,7 +16,7 @@ namespace JBook.Controllers
         [HttpGet]
         public IActionResult ShareLink()
         {
-            // 直接显示分享表单（前端 JS 已拦截未登录点击）
+            // Display the share form directly (the front-end JS has intercepted the non-logged-in click)
             ViewBag.SuccessMessage = TempData["ShareSuccess"] as string;
             return View();
         }
@@ -27,13 +26,13 @@ namespace JBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShareLink(BookLink model)
         {
-            // 二次保护：未登录直接返回 401
+            // Secondary protection: return 401 if not logged in
             if (!User.Identity.IsAuthenticated)
                 return Unauthorized();
 
             if (!ModelState.IsValid)
             {
-                // 校验失败，保留表单错误
+                // Verification failed, retain form error
                 ViewBag.SuccessMessage = null;
                 return View(model);
             }

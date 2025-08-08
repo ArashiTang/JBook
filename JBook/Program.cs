@@ -1,5 +1,3 @@
- using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using JBookCrawler.Factory;
 using JBookCrawler.BookSource;
 using JBook.Models;

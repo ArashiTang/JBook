@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace JBook.Migrations
 {
     /// <inheritdoc />
-    public partial class _0805 : Migration
+    public partial class _0808 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,7 +55,6 @@ namespace JBook.Migrations
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CoverPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -123,6 +124,17 @@ namespace JBook.Migrations
                 table: "BookLinks",
                 columns: new[] { "Id", "Author", "Description", "Format", "Title", "Url" },
                 values: new object[] { 1, "J.K.Rowling", "Harry Potter #8", "EPUB", "Harry Potter and The Cursed Child", "https://zh.z-library.sk/book/4288516/460399/harry-potter-and-the-cursed-child-harry-potter-8.html" });
+
+            migrationBuilder.InsertData(
+                table: "Documents",
+                columns: new[] { "Id", "Author", "ContentType", "CoverPath", "FilePath", "Title" },
+                values: new object[,]
+                {
+                    { 1, "Martin, George R.R.", "application/epub", "covers/1.jpg", "uploads\\A Song of Ice and Fire.epub", "A Song of Ice and Fire" },
+                    { 2, "Victor Hugo", "text/plain", null, "uploads\\The Count of Monte Cristo.txt", "The Count of Monte Cristo" },
+                    { 3, "None", "application/pdf", null, "uploads\\Week 5 - How to work with Views_V02.pdf", "WEEK 5" },
+                    { 4, "JBMan", "text/plain", null, "uploads\\ReadMe.txt", "ReadMe" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Users",

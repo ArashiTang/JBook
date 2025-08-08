@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using JBook.Models;
+﻿using JBook.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,19 +16,19 @@ namespace JBook.Controllers
             if (!User.Identity.IsAuthenticated)
                 return Unauthorized();
 
-            // 先从数据库里拿到这条 BookLink 的 URL
+            // First get the URL of this BookLink from the database
             var link = await _db.BookLinks
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(bl => bl.Id == linkId);
             var url = link?.Url ?? "unknown";
 
-            // 构造消息
+            // Construct message
             var user = User.Identity.Name ?? "Anonymous";
             var now = DateTime.Now;
             var msg = $"{user} reported Link#{linkId}({url}) at {now:yyyy-MM-dd HH:mm}";
 
 
-            // 存库
+            // Save to the database
             _db.Reports.Add(new Report
             {
                 LinkId = linkId,

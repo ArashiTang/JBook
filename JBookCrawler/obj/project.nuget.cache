@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "B+vkVIj9/s8=",
+  "dgSpecHash": "x7hG8eG7M1k=",
   "success": true,
-  "projectFilePath": "C:\\Users\\24839\\Desktop\\study work\\INFT3050\\JBook\\JBookCrawler\\JBookCrawler.csproj",
+  "projectFilePath": "C:\\Users\\24839\\Desktop\\study work\\INFT3050\\JBook1.2\\JBookCrawler\\JBookCrawler.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\24839\\.nuget\\packages\\htmlagilitypack\\1.12.1\\htmlagilitypack.1.12.1.nupkg.sha512",
     "C:\\Users\\24839\\.nuget\\packages\\microsoft.data.sqlite.core\\9.0.5\\microsoft.data.sqlite.core.9.0.5.nupkg.sha512",

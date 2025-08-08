@@ -1,6 +1,4 @@
 //Tang Jiongzheng(c3509120)//
-using System.Diagnostics;
-using JBook.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JBook.Controllers

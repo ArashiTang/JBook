@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using JBook.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using VersOne.Epub;
 
 namespace JBook.Controllers

@@ -1,9 +1,4 @@
-
 // Tang Jiongzheng(c3509120)//
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using JBook.Shared.Models;
 using JBookCrawler.Interface;

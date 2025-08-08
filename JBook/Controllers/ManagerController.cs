@@ -1,6 +1,4 @@
 ﻿// Controllers/ManagerController.cs
-using System.Linq;
-using System.Threading.Tasks;
 using JBook.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +15,7 @@ namespace JBook.Controllers
         // GET: /Manager/Manager
         public async Task<IActionResult> Manager()
         {
-            // 读出所有举报
+            // Read out all reports
             var reports = await _db.Reports
                                    .OrderByDescending(r => r.ReportedAt)
                                    .ToListAsync();
@@ -32,12 +30,12 @@ namespace JBook.Controllers
             var rpt = await _db.Reports.FindAsync(reportId);
             if (rpt != null)
             {
-                // 1. 删除对应的 BookLink（如果存在）
+                // 1. Delete the corresponding BookLink (if it exists)
                 var link = await _db.BookLinks.FindAsync(rpt.LinkId);
                 if (link != null)
                     _db.BookLinks.Remove(link);
 
-                // 2. 删除所有针对该 LinkId 的举报
+                // 2. Delete all reports for this LinkId
                 var related = _db.Reports.Where(r => r.LinkId == rpt.LinkId);
                 _db.Reports.RemoveRange(related);
 

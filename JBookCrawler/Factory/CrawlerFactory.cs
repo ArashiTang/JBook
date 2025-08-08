@@ -1,5 +1,4 @@
-﻿using System;
-using JBookCrawler.BookSource;
+﻿using JBookCrawler.BookSource;
 using JBookCrawler.Interface;
 using Microsoft.Extensions.DependencyInjection;
 
