@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JBookCrawler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f19c935b4bfa59737791f3cc641d3dc52e1bd37")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+27f44fe61a14148158ba001968dc26398259240a")]
 [assembly: System.Reflection.AssemblyProductAttribute("JBookCrawler")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JBookCrawler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
