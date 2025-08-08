@@ -24,13 +24,13 @@ namespace JBook.Controllers
         }
 
         // GET: /Search/Result?keyword=...&format=...
-        public async Task<IActionResult> Result(string keyword, string format = null)
+        public async Task<IActionResult> Result(string keyword, string? format = null)
         {
             if (string.IsNullOrWhiteSpace(keyword))
                 return RedirectToAction("Index", "Home");
 
-            // First, get all user sharing links matching the keyword from the database (regardless of format)
-            var allShared = _db.BookLinks
+            // Query the database for user shares matching keywords (without filtering the format first)
+            var allSharedRaw = _db.BookLinks
                 .Where(bl =>
                     EF.Functions.Like(bl.Title, $"%{keyword}%") ||
                     EF.Functions.Like(bl.Author, $"%{keyword}%"))
@@ -45,24 +45,71 @@ namespace JBook.Controllers
                 })
                 .ToList();
 
-            // Count the number of each format
-            var formatCounts = allShared
-                .GroupBy(b => b.Format)
-                .ToDictionary(g => g.Key, g => g.Count());
+            // The unified format is named Standard Five Categories, Unknown/Empty -> Other (for easy counting and filtering consistency)
+            string Normalize(string? f)
+            {
+                if (string.IsNullOrWhiteSpace(f)) return "Other";
+                var v = f.Trim().ToUpperInvariant();
+                return v switch
+                {
+                    "TXT" => "TXT",
+                    "EPUB" => "EPUB",
+                    "MOBI" => "MOBI",
+                    "PDF" => "PDF",
+                    _ => "Other"
+                };
+            }
 
-            // If a format is passed in, only the sharing results in that format will be retained
-            var userUploaded = string.IsNullOrEmpty(format)
-                ? allShared
-                : allShared.Where(b => b.Format == format).ToList();
+            var allShared = allSharedRaw
+                .Select(b => new Book
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Author = b.Author,
+                    Url = b.Url,
+                    Description = b.Description,
+                    Format = Normalize(b.Format)
+                })
+                .ToList();
 
-            // Call the crawler to obtain external data (quantity and filtering do not affect the crawler results)
+            // Count the five formats, ensuring each key exists
+            var formats = new[] { "TXT", "EPUB", "MOBI", "PDF", "Other" };
+            var formatCounts = formats.ToDictionary(f => f, f => 0);
+            foreach (var g in allShared.GroupBy(b => b.Format))
+            {
+                if (!formatCounts.ContainsKey(g.Key)) formatCounts[g.Key] = 0;
+                formatCounts[g.Key] = g.Count();
+            }
+
+            // Apply format filtering: Only filter if the format count is >= 1; otherwise, prompt and do not filter
+            string? appliedFormat = null;
+            var userUploaded = allShared; // No filtering by default
+
+            if (!string.IsNullOrWhiteSpace(format))
+            {
+                var fmt = Normalize(format);
+                var cnt = formatCounts.TryGetValue(fmt, out var c) ? c : 0;
+
+                if (cnt >= 1)
+                {
+                    appliedFormat = fmt;
+                    userUploaded = allShared.Where(b => b.Format == fmt).ToList();
+                }
+                else
+                {
+                    // Quantity is 0: Prompt + No filter
+                    TempData["FormatZero"] = $"Cannot see the source of the book without that format???（{fmt}）";
+                }
+            }
+
+            // Calling crawlers (not affected by format filtering)
             var zlibCrawler = _factory.GetCrawler("zlibrary");
             var openlibCrawler = _factory.GetCrawler("openlibrary");
 
             var zlibResults = zlibCrawler != null ? await zlibCrawler.SearchBooksAsync(keyword) : new List<Book>();
             var openlibResults = openlibCrawler != null ? await openlibCrawler.SearchBooksAsync(keyword) : new List<Book>();
 
-            // Combine the final model
+            // Assemble the model
             var model = new CombinedSearchResult
             {
                 UserBooks = userUploaded,
@@ -70,10 +117,10 @@ namespace JBook.Controllers
                 OpenLibraryBooks = openlibResults
             };
 
-            // Additional data passed to the view
+            // Passing to the view
             ViewBag.Keyword = keyword;
-            ViewBag.SelectedFormat = format;    // Currently selected format
-            ViewBag.FormatCounts = formatCounts;    // Dictionary of the number of formats
+            ViewBag.SelectedFormat = appliedFormat;    // Set only if the filter is actually applied
+            ViewBag.FormatCounts = formatCounts;       // Always include TXT/EPUB/MOBI/PDF/Other
 
             return View(model);
         }

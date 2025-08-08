@@ -49,10 +49,12 @@
                asp-route-keyword="@keyword"
                asp-route-format="@fmt"
                style="@style"
-               class="mx-1">
-                @* Use <text> to have Razor output plain text *@
+               class="mx-1 fmt-link"
+               data-count="@cnt"
+               data-format="@fmt">
                 @($"{fmt}({cnt})")
             </a>
+
 
             @if (fmt != formats.Last())
             {
@@ -283,4 +285,22 @@
             margin-bottom: 56px !important;
         }
     </style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          // Front-end interception: format with quantity 0 does not jump, prompts directly
+          document.querySelectorAll('.fmt-link').forEach(function (a) {
+            a.addEventListener('click', function (e) {
+              var cnt = parseInt(a.dataset.count || '0', 10);
+              if (cnt <= 0) {
+                e.preventDefault();
+                var fmt = a.dataset.format || '';
+                alert('Cannot see the source of the book without that format???（' + fmt + '）');
+              }
+            });
+          });
+        });
+    </script>
 }

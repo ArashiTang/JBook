@@ -5,7 +5,6 @@ This document is a user guide.
 1. Index page: In the index page you can search the source of the book based on the title and author name. And you can choose the source format
 
 2. Share page: After you login, you can share the source of one book(URL). Then you will be able to find your share when conducting a search.
-If you find a Url that is unusable, you can also report that link.
 
 !!(If you have an administrator account, you will be able to manage the shared resources that have been reported. )!!!
 
@@ -17,4 +16,8 @@ as well as a ReadMe file.
 
 You can delete or add books. When adding a book, you need to fill in the Title, the Author, and select the file. => In the "uploads" folder, we have already prepared a book for you (Reverend Insanity.epub). You can try adding it yourself.
 
-When using the reading interface, you can jump to different chapters, customize the reading background and font size.
+When using the reading interface：
+1. Back to bookshelf	📚
+2. You can jump to different chapters 📑
+3. Change Light/Dark theme ☀️
+4. Change background color and fonze size⚙️
